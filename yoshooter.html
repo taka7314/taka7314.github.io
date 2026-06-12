@@ -15,6 +15,10 @@
             --success: #00b09b;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -48,12 +52,14 @@
         #start-screen {
             background: linear-gradient(135deg, #1f1c2c, #928dab);
             text-align: center;
+            padding: 20px;
         }
 
         h1 {
             font-size: 3rem;
             text-shadow: 0 0 10px var(--primary);
             margin-bottom: 10px;
+            line-height: 1.2;
         }
         
         .subtitle {
@@ -68,7 +74,7 @@
             border-radius: 15px;
             border: 2px solid var(--primary);
             box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-            width: 80%;
+            width: 90%;
             max-width: 600px;
             text-align: left;
             margin-bottom: 20px;
@@ -82,9 +88,16 @@
             padding-bottom: 10px;
         }
 
+        .btn-controls {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         .checkbox-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
         }
 
@@ -93,6 +106,7 @@
             align-items: center;
             cursor: pointer;
             font-size: 1.1rem;
+            word-break: keep-all;
         }
 
         .checkbox-label input {
@@ -142,7 +156,6 @@
             display: flex;
             justify-content: space-between;
             padding: 15px 30px;
-            box-sizing: border-box;
             font-size: 1.5rem;
             font-weight: bold;
             z-index: 10;
@@ -237,7 +250,6 @@
             width: 100%;
             background: var(--panel-bg);
             padding: 15px;
-            box-sizing: border-box;
             border-top: 2px solid var(--primary);
             display: flex;
             flex-direction: column;
@@ -308,6 +320,7 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
+            padding: 20px;
         }
 
         @keyframes popUp {
@@ -336,11 +349,13 @@
             padding: 20px 40px;
             border-radius: 10px;
             text-align: center;
-            max-width: 95%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            overflow-y: auto;
+            max-height: 50vh;
         }
 
         .explanation-card h2 {
@@ -358,6 +373,7 @@
             justify-content: center;
             gap: 40px;
             margin-top: 10px;
+            width: 100%;
         }
 
         .katsuyou-table-container {
@@ -387,7 +403,7 @@
             font-weight: bold;
         }
 
-        /* 正解時の活用形を光らせるクラス */
+        /* 正解の活用形を光らせるクラス（正解・不正解問わず使用） */
         .highlight-cell {
             background: linear-gradient(135deg, #fff9c4, #ffeb3b) !important;
             color: #d32f2f !important;
@@ -416,14 +432,26 @@
             box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
 
+        /* Responsive adjustments */
         @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .btn { font-size: 1.2rem; padding: 10px 20px; }
+            .hud { font-size: 1.1rem; padding: 10px; }
+            .progress-container { top: 40px; }
+            .enemy-sign { font-size: 1.5rem; padding: 15px 20px; }
+            
+            .choice-group-label { width: 100%; text-align: center; line-height: 20px; }
+            .choice-btns { flex-wrap: wrap; }
+            .choice-btn { flex: 1 1 45%; }
+            
             .explanation-content {
                 flex-direction: column;
                 gap: 15px;
             }
-            .enemy-sign {
-                font-size: 1.8rem;
-            }
+            .katsuyou-table { font-size: 1rem; }
+            .katsuyou-table th, .katsuyou-table td { padding: 5px 10px; }
+            .result-title { font-size: 2.5rem; }
         }
 
         /* Screen specifics */
@@ -460,9 +488,9 @@
         
         <div class="settings-panel">
             <h3>出題する活用の種類を選択</h3>
-            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-                <button type="button" class="btn" style="padding: 5px 15px; font-size: 0.9rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(true)">すべて選択する</button>
-                <button type="button" class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.9rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(false)">すべて解除する</button>
+            <div class="btn-controls">
+                <button type="button" class="btn" style="padding: 8px 15px; font-size: 1rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(true)">すべて選択する</button>
+                <button type="button" class="btn btn-secondary" style="padding: 8px 15px; font-size: 1rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(false)">すべて解除する</button>
             </div>
             <div class="checkbox-grid" id="type-checkboxes">
                 </div>
@@ -511,7 +539,7 @@
 
         <div id="result-overlay">
             <div class="result-title" id="result-title"></div>
-            <div class="enemy-sign" id="result-enemy-sign" style="margin-bottom: 20px; background: #fff; color: #000; font-size: 2rem;"></div>
+            <div class="enemy-sign" id="result-enemy-sign" style="margin-bottom: 20px; background: #fff; color: #000;"></div>
             
             <div class="explanation-card">
                 <h2>基本形：<span id="exp-base"></span></h2>
@@ -651,7 +679,6 @@
     const ALL_ROWS = ["ア行", "カ行", "ガ行", "サ行", "ザ行", "タ行", "ダ行", "ナ行", "ハ行", "バ行", "マ行", "ヤ行", "ラ行", "ワ行"];
     const ALL_TYPES = ["四段活用", "上一段活用", "上二段活用", "下一段活用", "下二段活用", "変格活用"];
     
-    // 活用形のリスト（インデックス検索用）
     const ALL_FORMS = ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"];
     const FORM_INDEX_MAP = {
         "未然形": 0,
@@ -963,11 +990,8 @@
         document.getElementById('exp-base').innerText = currentQuestionData.base;
         document.getElementById('exp-details').innerText = `${currentQuestionData.row}・${currentQuestionData.type}・${currentQuestionData.form}`;
 
-        // 正解の活用形のインデックスを取得
-        let highlightIndex = -1;
-        if (isCorrect) {
-            highlightIndex = FORM_INDEX_MAP[currentQuestionData.form];
-        }
+        // 正解の活用形のインデックスを取得 (正解・不正解問わず強調する)
+        let highlightIndex = FORM_INDEX_MAP[currentQuestionData.form];
 
         // 活用表の生成（該当箇所にハイライトを付与）
         let rowHTML = '';
