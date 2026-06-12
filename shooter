@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古典文法 漢字GO風 動詞の活用アタック！</title>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg-color: #121212;
+            --panel-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #ffffff;
+            --danger: #ff4b2b;
+            --success: #00b09b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Title Screen */
+        #start-screen {
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+
+        .settings-panel {
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            margin-bottom: 20px;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+
+        .settings-panel h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .checkbox-label input {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .btn-secondary {
+            background: #555;
+            font-size: 1.2rem;
+            padding: 10px 30px;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+            box-shadow: none;
+        }
+
+        /* Game Screen */
+        #game-screen {
+            background: radial-gradient(circle at center, #2a2a35 0%, #000000 100%);
+            perspective: 800px;
+        }
+
+        .hud {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            box-sizing: border-box;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+
+        .lives {
+            color: #ff4b2b;
+            letter-spacing: 5px;
+        }
+
+        .progress-container {
+            position: absolute;
+            top: 60px;
+            width: 80%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--primary);
+            transform-origin: left;
+        }
+
+        /* 3D Game Area */
+        .game-area {
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .enemy {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 初期位置を調整して最初から見えやすく */
+            transform: translateZ(-500px) scale(0.6);
+            opacity: 0;
+        }
+
+        @keyframes approach {
+            0% {
+                transform: translateZ(-500px) scale(0.6);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateZ(200px) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .enemy-sprite {
+            font-size: 5rem;
+            margin-bottom: -20px;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px red);
+        }
+
+        .enemy-sign {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 20px 30px;
+            border-radius: 10px;
+            border: 5px solid #8b4513;
+            font-size: 2.5rem; /* 文字を大きく */
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            max-width: 90vw;
+            word-wrap: break-word;
+        }
+
+        .target-verb {
+            color: #d32f2f;
+            text-decoration: underline;
+            font-size: 1.1em; /* 少し強調 */
+        }
+
+        /* Control Panel */
+        .controls {
+            width: 100%;
+            background: var(--panel-bg);
+            padding: 15px;
+            box-sizing: border-box;
+            border-top: 2px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .choice-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .choice-group-label {
+            width: 100px;
+            text-align: right;
+            padding-right: 10px;
+            font-weight: bold;
+            line-height: 40px;
+            color: var(--primary);
+        }
+
+        .choice-btns {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .choice-btn {
+            flex: 1;
+            padding: 10px;
+            background: #2a2a2a;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .choice-btn:hover {
+            background: #444;
+        }
+
+        .choice-btn.selected {
+            background: var(--primary);
+            color: #000;
+            border-color: #fff;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Result Overlay */
+        #result-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        /* ポップアップアニメーション */
+        @keyframes popUp {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-title {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            opacity: 0;
+        }
+
+        .result-title.active-pop {
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .correct { color: #00ff00; text-shadow: 0 0 30px #00ff00; }
+        .wrong { color: #ff0000; text-shadow: 0 0 30px #ff0000; }
+
+        .explanation-card {
+            background: #f4f4f4;
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .explanation-card h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        /* 活用表とボタンを横並びにするレイアウト */
+        .explanation-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 10px;
+        }
+
+        .katsuyou-table-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .katsuyou-table {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            border-collapse: collapse;
+            font-family: 'Yu Mincho', 'MS Mincho', serif;
+            font-size: 1.3rem;
+        }
+
+        .katsuyou-table th, .katsuyou-table td {
+            border: 2px solid #555;
+            padding: 10px 15px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .katsuyou-table th {
+            background: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #e9e9e9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive adjustment for explanation */
+        @media (max-width: 768px) {
+            .explanation-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .enemy-sign {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Screen specifics */
+        .stats-box {
+            background: var(--panel-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        table.records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table.records-table th, table.records-table td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: center;
+        }
+        table.records-table th {
+            background: var(--primary);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" class="screen active">
+        <h1>古典文法<br>動詞の活用アタック！</h1>
+        <div class="subtitle">迫り来る例文！活用の種類と形をすべて選んで撃破しろ！</div>
+        
+        <div class="settings-panel">
+            <h3>出題する活用の種類を選択</h3>
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button type="button" class="btn" style="padding: 5px 15px; font-size: 0.9rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(true)">すべて選択する</button>
+                <button type="button" class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.9rem; margin: 0; border-radius: 5px;" onclick="selectAllTypes(false)">すべて解除する</button>
+            </div>
+            <div class="checkbox-grid" id="type-checkboxes">
+                </div>
+        </div>
+
+        <div>
+            <button class="btn" onclick="startGame()">ゲームスタート</button>
+        </div>
+        <div>
+            <button class="btn btn-secondary" onclick="showRecords()">成績を見る</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="hud">
+            <div id="stage-display">STAGE: 1/5</div>
+            <div id="question-counter">正解: 0/7</div>
+            <div class="lives" id="lives-display">❤️❤️❤️❤️❤️</div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="time-bar"></div>
+        </div>
+
+        <div class="game-area" id="game-area">
+            <div class="enemy" id="enemy">
+                <div class="enemy-sign" id="enemy-sign">
+                    </div>
+                <div class="enemy-sprite">👹</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="choice-group">
+                <div class="choice-group-label">活用の行</div>
+                <div class="choice-btns" id="row-btns"></div>
+            </div>
+            <div class="choice-group">
+                <div class="choice-group-label">活用の種類</div>
+                <div class="choice-btns" id="type-btns"></div>
+            </div>
+            <div class="choice-group">
+                <div class="choice-group-label">活用形</div>
+                <div class="choice-btns" id="form-btns"></div>
+            </div>
+        </div>
+
+        <div id="result-overlay">
+            <div class="result-title" id="result-title"></div>
+            <div class="enemy-sign" id="result-enemy-sign" style="margin-bottom: 20px; background: #fff; color: #000; font-size: 2rem;"></div>
+            
+            <div class="explanation-card">
+                <h2>基本形：<span id="exp-base"></span></h2>
+                <div class="explanation-content">
+                    <div class="katsuyou-table-container">
+                        <table class="katsuyou-table">
+                            <thead>
+                                <tr>
+                                    <th>未然形</th>
+                                    <th>連用形</th>
+                                    <th>終止形</th>
+                                    <th>連体形</th>
+                                    <th>已然形</th>
+                                    <th>命令形</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="katsuyou-row">
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="action-container">
+                        <p style="font-weight:bold; color:#333; font-size: 1.2rem; margin: 0 0 15px 0; border-bottom: 2px dashed #999; padding-bottom: 10px;" id="exp-details"></p>
+                        <button class="btn" style="padding: 12px 40px; font-size: 1.3rem; margin: 0;" onclick="nextQuestion()">次へ ➡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stage-clear-screen" class="screen">
+        <h1 style="color: var(--success); font-size: 4rem;">STAGE CLEAR!</h1>
+        <div class="stats-box">
+            <h2 id="sc-stage-text">ステージ 1 突破！</h2>
+            <p>ライフが1回復した！ (最大7)</p>
+        </div>
+        <button class="btn" onclick="startNextStage()">次のステージへ</button>
+    </div>
+
+    <div id="game-over-screen" class="screen">
+        <h1 style="color: var(--danger); font-size: 4rem;">GAME OVER</h1>
+        <div class="stats-box">
+            <h2 id="go-stage-text"></h2>
+            <p>ライフが尽きてしまった...</p>
+        </div>
+        <button class="btn" onclick="returnToTitle()">タイトルへ戻る</button>
+    </div>
+
+    <div id="game-clear-screen" class="screen">
+        <h1 style="color: gold; font-size: 4rem; text-shadow: 0 0 20px gold;">GAME CLEAR!!</h1>
+        <div class="stats-box">
+            <h2>全ステージクリア！おめでとう！</h2>
+            <p id="gc-score-text"></p>
+        </div>
+        <button class="btn" onclick="returnToTitle()">タイトルへ戻る</button>
+    </div>
+
+    <div id="records-screen" class="screen">
+        <h1>過去の成績</h1>
+        <div class="settings-panel" style="max-height: 60vh;">
+            <table class="records-table" id="records-table">
+                <thead>
+                    <tr>
+                        <th>日時</th>
+                        <th>到達ステージ</th>
+                        <th>結果</th>
+                    </tr>
+                </thead>
+                <tbody id="records-body">
+                    </tbody>
+            </table>
+        </div>
+        <button class="btn btn-secondary" onclick="returnToTitle()">戻る</button>
+    </div>
+
+<script>
+    // --- Data Base ---
+    const rawData = [
+        { text: "忘らるる身をば〇〇ず", target: "思は", base: "思ふ", row: "ハ行", type: "四段活用", form: "未然形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "げにと〇〇て、人々忘れず。", target: "思ひ", base: "思ふ", row: "ハ行", type: "四段活用", form: "連用形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "男はこの女をこそ得めと〇〇。", target: "思ふ", base: "思ふ", row: "ハ行", type: "四段活用", form: "終止形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "京に〇〇人なきにしもあらず。", target: "思ふ", base: "思ふ", row: "ハ行", type: "四段活用", form: "連体形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "はかなく〇〇ども、仏のはからはせ給ふやうあらむ。", target: "思へ", base: "思ふ", row: "ハ行", type: "四段活用", form: "已然形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "この一矢に定むべしと〇〇。", target: "思へ", base: "思ふ", row: "ハ行", type: "四段活用", form: "命令形", forms: ["は", "ひ", "ふ", "ふ", "へ", "へ"] },
+        { text: "大きなる声を〇〇て泣き叫ぶ。", target: "上げ", base: "上ぐ", row: "ガ行", type: "下二段活用", form: "連用形", forms: ["げ", "げ", "ぐ", "ぐる", "ぐれ", "げよ"] },
+        { text: "吹く風砂を〇〇。", target: "上ぐ", base: "上ぐ", row: "ガ行", type: "下二段活用", form: "終止形", forms: ["げ", "げ", "ぐ", "ぐる", "ぐれ", "げよ"] },
+        { text: "いま一陣旗を〇〇〇戦場にして", target: "上ぐる", base: "上ぐ", row: "ガ行", type: "下二段活用", form: "連体形", forms: ["げ", "げ", "ぐ", "ぐる", "ぐれ", "げよ"] },
+        { text: "烽火を〇〇〇ども", target: "上ぐれ", base: "上ぐ", row: "ガ行", type: "下二段活用", form: "已然形", forms: ["げ", "げ", "ぐ", "ぐる", "ぐれ", "げよ"] },
+        { text: "いと暗し。〇〇〇。", target: "上げよ", base: "上ぐ", row: "ガ行", type: "下二段活用", form: "命令形", forms: ["げ", "げ", "ぐ", "ぐる", "ぐれ", "げよ"] },
+        { text: "人間の大事、この三つには〇〇ず。", target: "過ぎ", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "未然形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "春〇〇て夏来たるらし", target: "過ぎ", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "連用形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "清見が関を〇〇。", target: "過ぐ", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "終止形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "知らぬ人と同じやうにて〇〇〇人あり。", target: "過ぐる", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "連体形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "わが膝のもとを〇〇〇ど", target: "過ぐれ", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "已然形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "早く〇〇〇。", target: "過ぎよ", base: "過ぐ", row: "ガ行", type: "上二段活用", form: "命令形", forms: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"] },
+        { text: "山までは〇ず。", target: "見", base: "見る", row: "マ行", type: "上一段活用", form: "未然形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "家の焼くるを〇て", target: "見", base: "見る", row: "マ行", type: "上一段活用", form: "連用形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "水鳥の思ふことなげに遊び合へるを〇〇。", target: "見る", base: "見る", row: "マ行", type: "上一段活用", form: "終止形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "月〇〇けしきなり。", target: "見る", base: "見る", row: "マ行", type: "上一段活用", form: "連体形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "不便なりと〇〇ど", target: "見れ", base: "見る", row: "マ行", type: "上一段活用", form: "已然形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "こなたにうつれるかげを〇〇。", target: "見よ", base: "見る", row: "マ行", type: "上一段活用", form: "命令形", forms: ["み", "み", "みる", "みる", "みれ", "みよ"] },
+        { text: "三足〇むと思ふなり。", target: "蹴", base: "蹴る", row: "カ行", type: "下一段活用", form: "未然形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "水を〇てその音を聞かせぬこと", target: "蹴", base: "蹴る", row: "カ行", type: "下一段活用", form: "連用形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "さと寄りて一足づつ〇〇。", target: "蹴る", base: "蹴る", row: "カ行", type: "下一段活用", form: "終止形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "二丈ばかり〇〇人もありしなり。", target: "蹴る", base: "蹴る", row: "カ行", type: "下一段活用", form: "連体形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "円子川〇〇ばぞ波は上がりける。", target: "蹴れ", base: "蹴る", row: "カ行", type: "下一段活用", form: "已然形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "尻〇〇。", target: "蹴よ", base: "蹴る", row: "カ行", type: "下一段活用", form: "命令形", forms: ["け", "け", "ける", "ける", "けれ", "けよ"] },
+        { text: "大和人、「〇む。」と言へり。", target: "来", base: "来", row: "カ行", type: "カ行変格活用", form: "未然形", forms: ["こ", "き", "く", "くる", "くれ", "こ（よ）"] },
+        { text: "この男〇たりけり。", target: "来", base: "来", row: "カ行", type: "カ行変格活用", form: "連用形", forms: ["こ", "き", "く", "くる", "くれ", "こ（よ）"] },
+        { text: "人々、絶えずとぶらひに〇。", target: "来", base: "来", row: "カ行", type: "カ行変格活用", form: "終止形", forms: ["こ", "き", "く", "くる", "くれ", "こ（よ）"] },
+        { text: "しのびて〇〇人見知りてほゆる犬。", target: "来る", base: "来", row: "カ行", type: "カ行変格活用", form: "連体形", forms: ["こ", "き", "く", "くる", "くれ", "こ（よ）"] },
+        { text: "春〇〇ば雁帰るなり", target: "来れ", base: "来", row: "カ行", type: "カ行変格活用", form: "已然形", forms: ["こ", "き", "く", "くる", "くれ", "こ（よ）"] },
+        { text: "いみじからむ心地も〇ず。", target: "せ", base: "す", row: "サ行", type: "サ行変格活用", form: "未然形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "遺恨のわざをも〇たりけるかな。", target: "し", base: "す", row: "サ行", type: "サ行変格活用", form: "連用形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "戌の時に、門出〇。", target: "す", base: "す", row: "サ行", type: "サ行変格活用", form: "終止形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "もとより友と〇〇人", target: "する", base: "す", row: "サ行", type: "サ行変格活用", form: "連体形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "弓矢を取り立てむと〇〇ども", target: "すれ", base: "す", row: "サ行", type: "サ行変格活用", form: "已然形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "教経に組んで生け捕りに〇〇。", target: "せよ", base: "す", row: "サ行", type: "サ行変格活用", form: "命令形", forms: ["せ", "し", "す", "する", "すれ", "せよ"] },
+        { text: "一杯食へども〇〇ず", target: "死な", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "未然形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "〇〇てののちまでも", target: "死に", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "連用形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "炎にまぐれてたちまちに〇〇。", target: "死ぬ", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "終止形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "人の食ひつれば〇〇〇ものぞ。", target: "死ぬる", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "連体形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "つひにはその毒のゆゑに〇〇〇ども", target: "死ぬれ", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "已然形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "吾を〇〇とや思ほすらむ。", target: "死ね", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "命令形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "おのが身はこの国の人にも〇〇ず。", target: "あら", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "未然形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "猫またといふもの〇〇て", target: "あり", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "連用形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "いと大きなる河〇〇。", target: "あり", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "終止形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "清水の〇〇所に伏しにけり。", target: "ある", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "連体形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "銭〇〇ども用ゐざらむは", target: "あれ", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "已然形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "なほここに〇〇。", target: "あれ", base: "あり", row: "ラ行", type: "ラ行変格活用", form: "命令形", forms: ["ら", "り", "り", "る", "れ", "れ"] },
+        { text: "四十にたらぬほどにて〇〇んこそ、", target: "死な", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "未然形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "男女〇〇〇もの数十人、", target: "死ぬる", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "連体形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] },
+        { text: "水におぼれて、死なば〇〇。", target: "死ね", base: "死ぬ", row: "ナ行", type: "ナ行変格活用", form: "命令形", forms: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"] }
+    ];
+
+    const ALL_ROWS = ["ア行", "カ行", "ガ行", "サ行", "ザ行", "タ行", "ダ行", "ナ行", "ハ行", "バ行", "マ行", "ヤ行", "ラ行", "ワ行"];
+    const ALL_TYPES = ["四段活用", "上一段活用", "上二段活用", "下一段活用", "下二段活用", "変格活用"];
+    const ALL_FORMS = ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"];
+    const PRAISE_WORDS = ["お見事！", "素晴らしい！", "完璧！", "その調子！", "ナイス解答！", "エクセレント！"];
+
+    // --- Game State ---
+    let selectedTypes = [];
+    let questionPool = [];
+    let currentStage = 1;
+    let stageCorrectCount = 0; 
+    let lives = 5;
+    let maxLives = 7;
+    let currentQuestionData = null;
+    let timerId = null;
+    let isAnswering = false;
+
+    let selectedRow = null;
+    let selectedType = null;
+    let selectedForm = null;
+    let currentSentenceHTML = "";
+
+    // --- Initialization ---
+    window.onload = () => {
+        initCheckboxes();
+    };
+
+    function initCheckboxes() {
+        const container = document.getElementById('type-checkboxes');
+        ALL_TYPES.forEach(type => {
+            const label = document.createElement('label');
+            label.className = 'checkbox-label';
+            label.innerHTML = `<input type="checkbox" value="${type}" checked> ${type}`;
+            container.appendChild(label);
+        });
+    }
+
+    function selectAllTypes(status) {
+        const checkboxes = document.querySelectorAll('#type-checkboxes input');
+        checkboxes.forEach(cb => cb.checked = status);
+    }
+
+    // --- Utilities ---
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function getRandomItems(array, n, exclude) {
+        const filtered = array.filter(item => item !== exclude);
+        return shuffleArray(filtered).slice(0, n);
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function updateLivesDisplay() {
+        const hearts = '❤️'.repeat(lives) + '🖤'.repeat(maxLives - lives);
+        document.getElementById('lives-display').innerText = hearts;
+    }
+
+    // --- Game Logic ---
+    function startGame() {
+        const checkboxes = document.querySelectorAll('#type-checkboxes input:checked');
+        selectedTypes = Array.from(checkboxes).map(cb => cb.value);
+
+        if (selectedTypes.length === 0) {
+            alert("少なくとも1つの活用の種類を選択してください。");
+            return;
+        }
+
+        questionPool = rawData.filter(q => {
+            let typeCheck = q.type;
+            if (q.type.includes("変格活用")) typeCheck = "変格活用";
+            return selectedTypes.includes(typeCheck);
+        });
+        
+        if (questionPool.length === 0) {
+            alert("選択した種類の問題が見つかりません。");
+            return;
+        }
+
+        currentStage = 1;
+        lives = 5;
+        startStage();
+    }
+
+    function startStage() {
+        stageCorrectCount = 0;
+        switchScreen('game-screen');
+        setupQuestion();
+    }
+
+    function startNextStage() {
+        currentStage++;
+        if (lives < maxLives) lives++;
+        startStage();
+    }
+
+    function setupQuestion() {
+        isAnswering = false;
+        selectedRow = null;
+        selectedType = null;
+        selectedForm = null;
+        document.getElementById('result-overlay').style.display = 'none';
+        
+        const titleEl = document.getElementById('result-title');
+        titleEl.classList.remove('active-pop');
+
+        updateLivesDisplay();
+        document.getElementById('stage-display').innerText = `STAGE: ${currentStage}/5`;
+        document.getElementById('question-counter').innerText = `正解: ${stageCorrectCount}/7`;
+
+        // Pick question
+        currentQuestionData = questionPool[Math.floor(Math.random() * questionPool.length)];
+
+        // Setup Enemy & Sign
+        currentSentenceHTML = currentQuestionData.text.replace(/〇+/g, `<span class="target-verb">${currentQuestionData.target}</span>`);
+        document.getElementById('enemy-sign').innerHTML = currentSentenceHTML;
+
+        let correctTypeDisplay = currentQuestionData.type;
+        if (correctTypeDisplay.includes("変格活用")) {
+            correctTypeDisplay = "変格活用";
+        }
+
+        generateButtons('row-btns', ALL_ROWS, currentQuestionData.row, val => { selectedRow = val; checkAutomaticSubmit(); });
+        generateButtons('type-btns', ALL_TYPES, correctTypeDisplay, val => { selectedType = val; checkAutomaticSubmit(); });
+        generateButtons('form-btns', ALL_FORMS, currentQuestionData.form, val => { selectedForm = val; checkAutomaticSubmit(); });
+
+        const timeLimit = getStageTime(currentStage);
+        startTimer(timeLimit);
+    }
+
+    function generateButtons(containerId, allOptions, correctAnswer, onClickCb) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        let options = getRandomItems(allOptions, 3, correctAnswer);
+        options.push(correctAnswer);
+        options = shuffleArray(options);
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(isAnswering) return;
+                Array.from(container.children).forEach(c => c.classList.remove('selected'));
+                btn.classList.add('selected');
+                onClickCb(opt);
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAutomaticSubmit() {
+        if (isAnswering) return;
+        if (selectedRow && selectedType && selectedForm) {
+            isAnswering = true; 
+            setTimeout(checkAnswer, 200); 
+        }
+    }
+
+    function getStageTime(stage) {
+        if (stage <= 2) return 25000;
+        if (stage <= 4) return 16000;
+        return 12000;
+    }
+
+    function startTimer(duration) {
+        const bar = document.getElementById('time-bar');
+        const enemy = document.getElementById('enemy');
+        
+        bar.style.transition = 'none';
+        bar.style.transform = 'scaleX(1)';
+        
+        enemy.style.animation = 'none';
+        void enemy.offsetWidth; // trigger reflow
+        
+        setTimeout(() => {
+            bar.style.transition = `transform ${duration}ms linear`;
+            bar.style.transform = 'scaleX(0)';
+            enemy.style.animation = `approach ${duration}ms linear forwards`;
+        }, 50);
+
+        clearTimeout(timerId);
+        timerId = setTimeout(() => {
+            if(isAnswering) return;
+            isAnswering = true;
+            processAnswer(false, "時間切れ！");
+        }, duration);
+    }
+
+    function stopTimer() {
+        clearTimeout(timerId);
+        const enemy = document.getElementById('enemy');
+        const computedStyle = window.getComputedStyle(enemy);
+        enemy.style.transform = computedStyle.getPropertyValue('transform');
+        enemy.style.animation = 'none';
+        
+        const bar = document.getElementById('time-bar');
+        const barStyle = window.getComputedStyle(bar);
+        bar.style.transform = barStyle.getPropertyValue('transform');
+        bar.style.transition = 'none';
+    }
+
+    function checkAnswer() {
+        let correctTypeDisplay = currentQuestionData.type;
+        if (correctTypeDisplay.includes("変格活用")) {
+            correctTypeDisplay = "変格活用";
+        }
+
+        const isCorrect = (selectedRow === currentQuestionData.row && 
+                           selectedType === correctTypeDisplay && 
+                           selectedForm === currentQuestionData.form);
+        
+        let msg = "不正解！";
+        if (isCorrect) {
+            msg = PRAISE_WORDS[Math.floor(Math.random() * PRAISE_WORDS.length)];
+        }
+        processAnswer(isCorrect, msg);
+    }
+
+    function processAnswer(isCorrect, titleMsg) {
+        stopTimer();
+
+        if (isCorrect) {
+            stageCorrectCount++;
+        } else {
+            lives--;
+            updateLivesDisplay();
+        }
+
+        const overlay = document.getElementById('result-overlay');
+        const title = document.getElementById('result-title');
+        title.innerText = titleMsg;
+        title.className = 'result-title ' + (isCorrect ? 'correct' : 'wrong');
+        
+        // トリガーアニメーション
+        void title.offsetWidth; 
+        title.classList.add('active-pop');
+
+        document.getElementById('result-enemy-sign').innerHTML = currentSentenceHTML;
+        document.getElementById('exp-base').innerText = currentQuestionData.base;
+        document.getElementById('exp-details').innerText = `${currentQuestionData.row}・${currentQuestionData.type}・${currentQuestionData.form}`;
+
+        const rowHTML = `
+            <td>${currentQuestionData.forms[0]}</td>
+            <td>${currentQuestionData.forms[1]}</td>
+            <td>${currentQuestionData.forms[2]}</td>
+            <td>${currentQuestionData.forms[3]}</td>
+            <td>${currentQuestionData.forms[4]}</td>
+            <td>${currentQuestionData.forms[5]}</td>
+        `;
+        document.getElementById('katsuyou-row').innerHTML = rowHTML;
+
+        overlay.style.display = 'flex';
+    }
+
+    function nextQuestion() {
+        if (lives <= 0) {
+            gameOver();
+            return;
+        }
+
+        if (stageCorrectCount >= 7) {
+            stageClear();
+        } else {
+            setupQuestion();
+        }
+    }
+
+    function stageClear() {
+        if (currentStage >= 5) {
+            gameClear();
+        } else {
+            document.getElementById('sc-stage-text').innerText = `ステージ ${currentStage} 突破！`;
+            switchScreen('stage-clear-screen');
+        }
+    }
+
+    function gameOver() {
+        saveRecord("GAME OVER");
+        document.getElementById('go-stage-text').innerText = `到達: ステージ ${currentStage} (合計正解数: ${stageCorrectCount}/7)`;
+        switchScreen('game-over-screen');
+    }
+
+    function gameClear() {
+        saveRecord("CLEAR");
+        document.getElementById('gc-score-text').innerText = `残りライフ: ${lives} / 7`;
+        switchScreen('game-clear-screen');
+    }
+
+    function saveRecord(result) {
+        let records = JSON.parse(localStorage.getItem('kanjiGoKotenRecords') || '[]');
+        const date = new Date();
+        const dateString = `${date.getFullYear()}/${(date.getMonth()+1).toString().padStart(2,'0')}/${date.getDate().toString().padStart(2,'0')} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+        
+        records.push({
+            date: dateString,
+            stage: currentStage,
+            result: result
+        });
+
+        if(records.length > 10) records.shift();
+        localStorage.setItem('kanjiGoKotenRecords', JSON.stringify(records));
+    }
+
+    function showRecords() {
+        const tbody = document.getElementById('records-body');
+        tbody.innerHTML = '';
+        
+        let records = JSON.parse(localStorage.getItem('kanjiGoKotenRecords') || '[]');
+        if (records.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">記録がありません</td></tr>';
+        } else {
+            records.reverse().forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${r.date}</td><td>Stage ${r.stage}</td><td>${r.result}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        switchScreen('records-screen');
+    }
+
+    function returnToTitle() {
+        switchScreen('start-screen');
+    }
+</script>
+</body>
+</html>
