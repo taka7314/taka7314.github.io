@@ -1,1 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用言クエスト</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap');
 
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+    margin: 0;
+    padding: 0;
+    color: #333;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 950px; 
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  /* ---------------- ボタン全般 ---------------- */
+  .btn {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 1.2em;
+    font-family: inherit;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #fff;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn-primary { background-color: #4ecdc4; box-shadow: 0 6px 0 #3b9b95; }
+  .btn-secondary { background-color: #ff9f43; box-shadow: 0 6px 0 #c87a2c; }
+  .btn-stats { background-color: #9b59b6; box-shadow: 0 6px 0 #8e44ad; }
+  .btn-danger { background-color: #e74c3c; box-shadow: 0 4px 0 #c0392b; }
+  .btn:active { transform: translateY(6px); box-shadow: none; }
+  
+  .btn-home {
+    background-color: #95a5a6;
+    box-shadow: 0 4px 0 #7f8c8d;
+    font-size: 1em;
+    padding: 10px 20px;
+  }
+
+  /* ---------------- トップページ ---------------- */
+  #top-page { padding-top: 5vh; }
+  .title {
+    font-size: 3.5em;
+    color: #ff4757;
+    text-shadow: 3px 3px 0px #fff, 5px 5px 0px #f1c40f;
+    margin-bottom: 10px;
+    font-weight: 800;
+  }
+  .subtitle {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    background: rgba(255,255,255,0.7);
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+
+  .main-buttons { margin-bottom: 30px; }
+
+  .settings-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px; 
+    padding: 15px; 
+    max-width: 480px; 
+    margin: 0 auto 20px auto;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    text-align: left;
+    border: 3px solid #bdc3c7;
+  }
+  .settings-title {
+    font-size: 1.1em; 
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    text-align: center;
+    border-bottom: 2px dashed #bdc3c7;
+    padding-bottom: 8px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px; 
+    margin-bottom: 12px;
+  }
+  .category-label {
+    display: flex;
+    align-items: center;
+    background: #f1f2f6;
+    padding: 6px 10px; 
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em; 
+    font-weight: bold;
+    color: #34495e;
+    transition: background 0.2s;
+  }
+  .category-label:hover { background: #dfe4ea; }
+  .category-label input[type="checkbox"] { margin-right: 6px; }
+  .select-all-btns { text-align: center; margin-bottom: 10px; }
+  .btn-small {
+    padding: 4px 12px;
+    font-size: 0.85em; 
+    margin: 0 4px;
+    border-radius: 15px;
+    background: #7f8c8d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn-small:hover { background: #34495e; }
+
+  /* ---------------- ステージ画面 ---------------- */
+  #stage-start-page, #gameover-page, #quest-clear-page, #quiz-page, #stats-page { display: none; }
+  
+  .rpg-card {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 40px; 
+    border-radius: 10px;
+    border: 8px ridge #f39c12;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.3);
+    margin: 20px auto;
+    max-width: 600px;
+  }
+
+  .stage-title {
+    font-size: 2.5em;
+    color: #f1c40f;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .boss-area {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  .boss-emoji {
+    font-size: 5rem;
+    animation: float 2s infinite ease-in-out;
+    text-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  /* ラスボス撃破時のアニメーション */
+  .boss-defeat {
+    animation: defeat 2.5s forwards ease-in;
+  }
+  @keyframes defeat {
+    0% { transform: scale(1) rotate(0); filter: grayscale(0); opacity: 1; }
+    20% { transform: scale(1.2) rotate(-10deg); filter: grayscale(0.5); opacity: 1; }
+    40% { transform: scale(1.2) rotate(10deg); filter: grayscale(0.8); opacity: 1; }
+    60% { transform: scale(1.2) rotate(-10deg); filter: grayscale(1); opacity: 0.8; }
+    100% { transform: scale(0) translateY(100px) rotate(180deg); filter: grayscale(1); opacity: 0; }
+  }
+
+  .stage-desc {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ecf0f1;
+    margin-bottom: 30px;
+    line-height: 1.5;
+  }
+
+  .warning-text { color: #e74c3c; font-size: 1.3em; margin-bottom: 20px; }
+
+  /* ---------------- クイズページ ---------------- */
+  .top-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .blackboard {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 45px 30px 25px 30px; 
+    min-height: 560px;
+    border-radius: 10px;
+    border: 8px ridge #f39c12;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+  }
+
+  .frames-row {
+    display: flex;
+    flex-direction: row-reverse; 
+    justify-content: center;
+    align-items: stretch; 
+    width: 100%;
+    gap: 30px; 
+    margin-top: 15px; 
+    margin-bottom: 15px; 
+  }
+
+  .title-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .q-badge {
+    position: absolute;
+    top: -22px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4757;
+    color: white;
+    padding: 5px 25px;
+    border-radius: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    z-index: 10;
+    white-space: nowrap;
+    border: 2px solid #fff;
+  }
+
+  .quiz-title {
+    writing-mode: vertical-rl;
+    font-size: 1.5em;
+    border: 3px solid #f1c40f;
+    border-radius: 12px;
+    padding: 35px 15px 25px 15px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    background-color: rgba(255, 255, 255, 0.05);
+    font-weight: bold;
+    color: #f1c40f; 
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+    flex-grow: 1; 
+  }
+
+  .highlight-word {
+    color: #ff4757; 
+    font-size: 2em; 
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .monster-text { font-size: 0.7em; color: #ecf0f1; }
+
+  .table-wrapper { display: flex; align-items: stretch; }
+  .vertical-table-container { writing-mode: vertical-rl; }
+
+  table.vertical-table {
+    border-collapse: collapse;
+    font-size: 1.4em;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%; 
+    border: 2px solid #34495e;
+  }
+  .vertical-table th, .vertical-table td {
+    border: 1px solid #4a6278;
+    padding: 15px 10px;
+    min-height: 80px; 
+    text-align: center;
+    vertical-align: middle;
+  }
+  .vertical-table th { background-color: rgba(255,255,255,0.15); color: #a2ded0; }
+
+  .stem-text { display: inline-block; color: #ecf0f1; font-weight: normal; margin-bottom: 8px; }
+  .rotate-paren { display: inline-block; transform: rotate(90deg); }
+  
+  .blank {
+    background-color: rgba(255,255,255,0.1);
+    border-left: 3px solid #fff; 
+    min-height: 35px; 
+    min-width: 30px;  
+    display: inline-block;
+    border-radius: 4px;
+    transition: all 0.3s;
+    padding: 5px 0;
+  }
+  .highlight {
+    background-color: #f1c40f;
+    color: #2c3e50;
+    border-left: 3px solid #e67e22;
+    animation: pulse 0.8s infinite alternate;
+    font-weight: bold;
+  }
+  @keyframes pulse {
+    from { box-shadow: 0 0 10px #f1c40f; transform: scale(1); }
+    to { box-shadow: 0 0 20px #f1c40f; transform: scale(1.1); }
+  }
+
+  .score-board {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 3px double #95a5a6;
+    border-radius: 10px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; 
+    align-items: center;
+    min-width: 130px;
+    margin: 0;
+  }
+  .score-item { display: flex; flex-direction: column; align-items: center; }
+  .score-label { font-size: 0.85em; color: #a2ded0; margin-bottom: 5px; }
+  .score-value { font-size: 1.6em; font-weight: bold; color: #f1c40f; }
+
+  .bottom-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px; 
+  }
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 9px; 
+    width: 100%;
+    max-width: 380px; 
+  }
+  .choice-btn {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border: 3px solid #bdc3c7; 
+    border-bottom: 5px solid #95a5a6;
+    border-radius: 8px; 
+    height: 48px;
+    padding: 0;
+    font-size: 1.2em; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, border-width 0.1s;
+  }
+  .choice-btn:hover { background-color: #fff; transform: translateY(-2px); }
+  .choice-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+
+  /* ---------------- 成績ページ ---------------- */
+  .stats-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    color: #333;
+    border: 4px solid #bdc3c7;
+  }
+  .stats-header {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: bold;
+    border-bottom: 3px solid #4ecdc4;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+  .stats-table-wrapper { overflow-x: auto; margin-bottom: 40px; }
+  .stats-table { width: 100%; border-collapse: collapse; font-size: 1.2em; }
+  .stats-table th, .stats-table td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+  .stats-table th { background-color: #f8f9fa; color: #2c3e50; }
+  
+  .chart-title { font-size: 1.5em; color: #2c3e50; margin-bottom: 20px; font-weight: bold; }
+  .chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 250px;
+    gap: 20px;
+    padding: 30px 10px 10px 10px;
+    border-bottom: 2px solid #bdc3c7;
+    border-left: 2px solid #bdc3c7;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    background: repeating-linear-gradient(0deg, transparent, transparent 49px, #f1f2f6 49px, #f1f2f6 50px);
+    background-size: 100% 50px;
+  }
+  .bar-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 50px; }
+  .bar {
+    width: 100%; background-color: #ff9f43; border-radius: 5px 5px 0 0; position: relative; box-shadow: 2px 0 5px rgba(0,0,0,0.2); transition: height 0.5s ease-out;
+  }
+  .bar-value { position: absolute; top: -25px; width: 100%; text-align: center; font-size: 0.9em; font-weight: bold; color: #e67e22; }
+  .bar-label { font-size: 0.9em; margin-top: 10px; color: #7f8c8d; font-weight: bold; }
+
+  /* ---------------- ポップアップ ---------------- */
+  #complete-popup {
+    position: absolute;
+    top: -120px; 
+    left: 50%;
+    transform: translateX(-50%) rotate(-7.5deg);
+    z-index: 1000;
+    width: 250px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+    border: 4px solid #f1c40f;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3), 0 0 15px rgba(241, 196, 15, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  #popup-ribbon {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff6b6b;
+    color: #fff;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  }
+
+  .popup-title { font-size: 1.8em; color: #e67e22; margin: 10px 0 5px 0; font-weight: 800; }
+  .popup-text { font-size: 1.1em; color: #2c3e50; margin: 0; font-weight: bold; }
+  
+  @keyframes popIn {
+    0% { transform: translateX(-50%) rotate(-7.5deg) scale(0.5); opacity: 0; }
+    100% { transform: translateX(-50%) rotate(-7.5deg) scale(1); opacity: 1; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div id="top-page">
+    <div class="title">⚔️ 用言クエスト ⚔️</div>
+    <div class="subtitle">古典文法のマスターを目指し、冒険の旅に出よう！</div>
+    
+    <div class="main-buttons">
+      <button class="btn btn-primary" onclick="initGame('sequence')">🗡️ クエストに出発する</button><br>
+      <button class="btn btn-secondary" onclick="initGame('random')">🐉 ランダムエンカウント</button><br>
+      <button class="btn btn-stats" onclick="showStatsPage()">📜 冒険の記録</button>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-title">出現する敵（活用の種類）を選ぶ</div>
+      <div class="select-all-btns">
+        <button class="btn-small" onclick="toggleCategories(true)">すべて選択</button>
+        <button class="btn-small" onclick="toggleCategories(false)">すべて解除</button>
+      </div>
+      <div class="category-grid" id="category-checkboxes">
+        </div>
+    </div>
+  </div>
+
+  <div id="stage-start-page">
+    <div class="top-bar">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+    <div class="rpg-card">
+      <div class="stage-title" id="stage-title-text">STAGE 1</div>
+      <div class="boss-area">
+        <div class="boss-emoji" id="boss-emoji">🟢</div>
+      </div>
+      <div class="stage-desc">
+        立ちはだかる5つの用言を撃破せよ！<br>
+        <span style="color: #f1c40f;">命中率(正解率) 80% 以上</span> でステージクリアだ！
+      </div>
+      <button class="btn btn-primary" style="font-size: 1.5em; padding: 15px 50px;" onclick="startStageQuestions()">▶ バトルスタート</button>
+    </div>
+  </div>
+
+  <div id="quiz-page">
+    <div class="top-bar">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+    
+    <div class="blackboard">
+      <div class="frames-row">
+        <div class="title-wrapper">
+          <div class="q-badge" id="q-number-badge">Ｑ１</div>
+          <div class="quiz-title" id="quiz-header">問題</div>
+          
+          <div id="complete-popup" style="display: none;">
+            <div id="popup-ribbon">✨ Great Job! ✨</div>
+            <div class="popup-title" id="popup-title">Clear!</div>
+            <div class="popup-text" id="popup-accuracy">命中率: 100%</div>
+          </div>
+          
+          <div id="next-btn-container" style="visibility: hidden; text-align: center; margin-top: 15px; height: 45px;">
+            <button id="next-btn" class="btn btn-primary" style="font-size: 1em; padding: 10px 0; margin: 0; box-shadow: 0 4px 0 #3b9b95; width: 85%; box-sizing: border-box;" onclick="goToNextQ()">次へ ➔</button>
+          </div>
+        </div>
+        
+        <div class="table-wrapper">
+          <div id="table-container" class="vertical-table-container"></div>
+        </div>
+
+        <div class="score-board">
+          <div class="score-item">
+            <span class="score-label">攻撃回数</span>
+            <span class="score-value" id="score-attempts">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-label">クリティカル(正解)</span>
+            <span class="score-value" id="score-correct">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-label">命中率</span>
+            <span class="score-value" id="score-accuracy">0%</span>
+          </div>
+        </div>
+      </div> 
+
+      <div class="bottom-controls">
+        <div class="choices" id="choices-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameover-page">
+    <div class="rpg-card" style="border-color: #e74c3c;">
+      <div class="stage-title" style="color: #e74c3c;">YOU DIED...</div>
+      <div class="boss-area">
+        <div class="boss-emoji" style="animation: none; filter: grayscale(1); transform: rotate(90deg);">💀</div>
+      </div>
+      <div class="warning-text">
+        無念... 命中率が80%に届かなかった。
+      </div>
+      <button class="btn btn-primary" onclick="retryStage()">🔄 このステージをやり直す</button><br>
+      <button class="btn btn-secondary" onclick="retryFromFirst()">⏪ 最初からやり直す</button><br>
+      <button class="btn btn-home" style="margin-top: 20px;" onclick="goHome()">トップページに戻る</button>
+    </div>
+  </div>
+
+  <div id="quest-clear-page">
+    <div class="rpg-card" style="border-color: #f1c40f;">
+      <div class="stage-title" style="color: #f1c40f; font-size: 3em;">QUEST CLEARED!!</div>
+      <div class="boss-area">
+        <div class="boss-emoji" id="final-boss-emoji">👿</div>
+      </div>
+      <div class="stage-desc" style="font-size: 1.5em; color: #f1c40f;">
+        見事、すべての用言を討伐した！<br>
+        君は真の古典文法マスターだ！
+      </div>
+      <button class="btn btn-primary" style="font-size: 1.5em; padding: 15px 40px;" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+  </div>
+
+  <div id="stats-page">
+    <div class="top-bar" style="justify-content: space-between;">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+      <button class="btn btn-danger" onclick="clearStats()">🗑️ 記録を消去</button>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-header">冒険の記録（日別）</div>
+      <div class="stats-table-wrapper">
+        <table class="stats-table" id="stats-table"></table>
+      </div>
+      <div class="chart-title">📈 命中率の推移</div>
+      <div class="chart-container" id="stats-chart"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CATEGORY_ORDER = ["四段", "上二段", "下二段", "上一段", "下一段", "カ変", "サ変", "ナ変", "ラ変", "形容詞", "形容動詞"];
+
+  // ボスキャラの設定 (Stage1〜7)
+  const BOSSES = ["🟢", "🦇", "🐺", "🧟", "🧛", "🐉", "👿"];
+
+  // 全55題の問題データ
+  const baseQuestions = [
+    { category: "四段", type: "四段活用", word: "行く", stem: "行", template: "verb", answers: ["か", "き", "く", "く", "け", "け"], options: ["か", "き", "く", "け", "こ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "咲く", stem: "咲", template: "verb", answers: ["か", "き", "く", "く", "け", "け"], options: ["か", "き", "く", "け", "こ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "書く", stem: "書", template: "verb", answers: ["か", "き", "く", "く", "け", "け"], options: ["か", "き", "く", "け", "こ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "思ふ", stem: "思", template: "verb", answers: ["は", "ひ", "ふ", "ふ", "へ", "へ"], options: ["は", "ひ", "ふ", "へ", "ほ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "読む", stem: "読", template: "verb", answers: ["ま", "み", "む", "む", "め", "め"], options: ["ま", "み", "む", "め", "も", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "飛ぶ", stem: "飛", template: "verb", answers: ["ば", "び", "ぶ", "ぶ", "べ", "べ"], options: ["ば", "び", "ぶ", "べ", "ぼ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "待つ", stem: "待", template: "verb", answers: ["た", "ち", "つ", "つ", "て", "て"], options: ["た", "ち", "つ", "て", "と", "だ", "ぢ", "づ", "で"] },
+    { category: "四段", type: "四段活用", word: "乗る", stem: "乗", template: "verb", answers: ["ら", "り", "る", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "笑ふ", stem: "笑", template: "verb", answers: ["は", "ひ", "ふ", "ふ", "へ", "へ"], options: ["は", "ひ", "ふ", "へ", "ほ", "て", "た", "と", "な"] },
+    { category: "四段", type: "四段活用", word: "散る", stem: "散", template: "verb", answers: ["ら", "り", "る", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "て", "た", "と", "な"] },
+    { category: "上二段", type: "上二段活用", word: "過ぐ", stem: "過", template: "verb", answers: ["ぎ", "ぎ", "ぐ", "ぐる", "ぐれ", "ぎよ"], options: ["が", "ぎ", "ぐ", "げ", "ご", "ぐる", "ぐれ", "ぎよ", "ぐよ"] },
+    { category: "上二段", type: "上二段活用", word: "落つ", stem: "落", template: "verb", answers: ["ち", "ち", "つ", "つる", "つれ", "ちよ"], options: ["た", "ち", "つ", "て", "と", "つる", "つれ", "ちよ", "つよ"] },
+    { category: "上二段", type: "上二段活用", word: "起く", stem: "起", template: "verb", answers: ["き", "き", "く", "くる", "くれ", "きよ"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "きよ", "くよ"] },
+    { category: "上二段", type: "上二段活用", word: "生く", stem: "生", template: "verb", answers: ["き", "き", "く", "くる", "くれ", "きよ"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "きよ", "くよ"] },
+    { category: "上二段", type: "上二段活用", word: "老ゆ", stem: "老", template: "verb", answers: ["い", "い", "ゆ", "ゆる", "ゆれ", "いよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "いよ", "ゆよ"] },
+    { category: "上二段", type: "上二段活用", word: "悔ゆ", stem: "悔", template: "verb", answers: ["い", "い", "ゆ", "ゆる", "ゆれ", "いよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "いよ", "ゆよ"] },
+    { category: "上二段", type: "上二段活用", word: "報ゆ", stem: "報", template: "verb", answers: ["い", "い", "ゆ", "ゆる", "ゆれ", "いよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "いよ", "ゆよ"] },
+    { category: "上二段", type: "上二段活用", word: "恋ふ", stem: "恋", template: "verb", answers: ["ひ", "ひ", "ふ", "ふる", "ふれ", "ひよ"], options: ["は", "ひ", "ふ", "へ", "ほ", "ふる", "ふれ", "ひよ", "ふよ"] },
+    { category: "上二段", type: "上二段活用", word: "恥づ", stem: "恥", template: "verb", answers: ["ぢ", "ぢ", "づ", "づる", "づれ", "ぢよ"], options: ["だ", "ぢ", "づ", "で", "ど", "づる", "づれ", "ぢよ", "づよ"] },
+    { category: "上二段", type: "上二段活用", word: "恨む", stem: "恨", template: "verb", answers: ["み", "み", "む", "むる", "むれ", "みよ"], options: ["ま", "み", "む", "め", "も", "むる", "むれ", "みよ", "むよ"] },
+    { category: "下二段", type: "下二段活用", word: "求む", stem: "求", template: "verb", answers: ["め", "め", "む", "むる", "むれ", "めよ"], options: ["ま", "み", "む", "め", "も", "むる", "むれ", "めよ", "みよ"] },
+    { category: "下二段", type: "下二段活用", word: "受く", stem: "受", template: "verb", answers: ["け", "け", "く", "くる", "くれ", "けよ"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "けよ", "きよ"] },
+    { category: "下二段", type: "下二段活用", word: "得", stem: "（得）", template: "verb", answers: ["え", "え", "う", "うる", "うれ", "えよ"], options: ["あ", "い", "う", "え", "お", "うる", "うれ", "えよ", "いよ"] },
+    { category: "下二段", type: "下二段活用", word: "寝", stem: "（寝）", template: "verb", answers: ["ね", "ね", "ぬ", "ぬる", "ぬれ", "ねよ"], options: ["な", "に", "ぬ", "ね", "の", "ぬる", "ぬれ", "ねよ", "によ"] },
+    { category: "下二段", type: "下二段活用", word: "経", stem: "（経）", template: "verb", answers: ["へ", "へ", "ふ", "ふる", "ふれ", "へよ"], options: ["は", "ひ", "ふ", "へ", "ほ", "ふる", "ふれ", "へよ", "ひよ"] },
+    { category: "下二段", type: "下二段活用", word: "心得", stem: "心", template: "verb", answers: ["え", "え", "う", "うる", "うれ", "えよ"], options: ["あ", "い", "う", "え", "お", "うる", "うれ", "えよ", "いよ"] },
+    { category: "下二段", type: "下二段活用", word: "見ゆ", stem: "見", template: "verb", answers: ["え", "え", "ゆ", "ゆる", "ゆれ", "えよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "えよ", "いよ"] },
+    { category: "下二段", type: "下二段活用", word: "植う", stem: "植", template: "verb", answers: ["ゑ", "ゑ", "う", "うる", "うれ", "ゑよ"], options: ["わ", "え", "う", "ゑ", "よ", "うる", "うれ", "ゑよ", "えよ"] },
+    { category: "下二段", type: "下二段活用", word: "覚ゆ", stem: "覚", template: "verb", answers: ["え", "え", "ゆ", "ゆる", "ゆれ", "えよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "えよ", "いよ"] },
+    { category: "下二段", type: "下二段活用", word: "越ゆ", stem: "越", template: "verb", answers: ["え", "え", "ゆ", "ゆる", "ゆれ", "えよ"], options: ["や", "い", "ゆ", "え", "よ", "ゆる", "ゆれ", "えよ", "いよ"] },
+    { category: "下二段", type: "下二段活用", word: "据う", stem: "据", template: "verb", answers: ["ゑ", "ゑ", "う", "うる", "うれ", "ゑよ"], options: ["わ", "え", "う", "ゑ", "よ", "うる", "うれ", "ゑよ", "えよ"] },
+    { category: "下二段", type: "下二段活用", word: "答ふ", stem: "答", template: "verb", answers: ["へ", "へ", "ふ", "ふる", "ふれ", "へよ"], options: ["は", "ひ", "ふ", "へ", "ほ", "ふる", "ふれ", "へよ", "ひよ"] },
+    { category: "上一段", type: "上一段活用", word: "見る", stem: "（見）", template: "verb", answers: ["み", "み", "みる", "みる", "みれ", "みよ"], options: ["ま", "み", "む", "め", "も", "みる", "みれ", "みよ", "むる"] },
+    { category: "上一段", type: "上一段活用", word: "着る", stem: "（着）", template: "verb", answers: ["き", "き", "きる", "きる", "きれ", "きよ"], options: ["か", "き", "く", "け", "こ", "きる", "きれ", "きよ", "くる"] },
+    { category: "上一段", type: "上一段活用", word: "似る", stem: "（似）", template: "verb", answers: ["に", "に", "にる", "にる", "にれ", "によ"], options: ["な", "に", "ぬ", "ね", "の", "にる", "にれ", "によ", "ぬる"] },
+    { category: "上一段", type: "上一段活用", word: "煮る", stem: "（煮）", template: "verb", answers: ["に", "に", "にる", "にる", "にれ", "によ"], options: ["な", "に", "ぬ", "ね", "の", "にる", "にれ", "によ", "ぬる"] },
+    { category: "上一段", type: "上一段活用", word: "干る", stem: "（干）", template: "verb", answers: ["ひ", "ひ", "ひる", "ひる", "ひれ", "ひよ"], options: ["は", "ひ", "ふ", "へ", "ほ", "ひる", "ひれ", "ひよ", "ふる"] },
+    { category: "上一段", type: "上一段活用", word: "射る", stem: "（射）", template: "verb", answers: ["い", "い", "いる", "いる", "いれ", "いよ"], options: ["や", "い", "ゆ", "え", "よ", "いる", "いれ", "いよ", "ゆる"] },
+    { category: "上一段", type: "上一段活用", word: "鋳る", stem: "（鋳）", template: "verb", answers: ["い", "い", "いる", "いる", "いれ", "いよ"], options: ["や", "い", "ゆ", "え", "よ", "いる", "いれ", "いよ", "ゆる"] },
+    { category: "上一段", type: "上一段活用", word: "居る", stem: "（居）", template: "verb", answers: ["ゐ", "ゐ", "ゐる", "ゐる", "ゐれ", "ゐよ"], options: ["わ", "ゐ", "う", "い", "を", "ゐる", "ゐれ", "ゐよ", "いる"] },
+    { category: "上一段", type: "上一段活用", word: "率る", stem: "（率）", template: "verb", answers: ["ゐ", "ゐ", "ゐる", "ゐる", "ゐれ", "ゐよ"], options: ["わ", "ゐ", "う", "い", "を", "ゐる", "ゐれ", "ゐよ", "いる"] },
+    { category: "上一段", type: "上一段活用", word: "用ゐる", stem: "用", template: "verb", answers: ["ゐ", "ゐ", "ゐる", "ゐる", "ゐれ", "ゐよ"], options: ["わ", "ゐ", "う", "い", "を", "ゐる", "ゐれ", "ゐよ", "いる"] },
+    { category: "上一段", type: "上一段活用", word: "顧みる", stem: "顧", template: "verb", answers: ["み", "み", "みる", "みる", "みれ", "みよ"], options: ["ま", "み", "む", "め", "も", "みる", "みれ", "みよ", "むる"] },
+    { category: "下一段", type: "下一段活用", word: "蹴る", stem: "（蹴）", template: "verb", answers: ["け", "け", "ける", "ける", "けれ", "けよ"], options: ["か", "き", "く", "け", "こ", "ける", "けれ", "けよ", "きよ"] },
+    { category: "カ変", type: "カ行変格活用", word: "来", stem: "（来）", template: "verb", answers: ["こ", "き", "く", "くる", "くれ", "こ（よ）"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "こ（よ）", "こよ"] },
+    { category: "カ変", type: "カ行変格活用", word: "出で来", stem: "出で", template: "verb", answers: ["こ", "き", "く", "くる", "くれ", "こ（よ）"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "こ（よ）", "こよ"] },
+    { category: "カ変", type: "カ行変格活用", word: "詣で来", stem: "詣で", template: "verb", answers: ["こ", "き", "く", "くる", "くれ", "こ（よ）"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "こ（よ）", "こよ"] },
+    { category: "カ変", type: "カ行変格活用", word: "もて来", stem: "もて", template: "verb", answers: ["こ", "き", "く", "くる", "くれ", "こ（よ）"], options: ["か", "き", "く", "け", "こ", "くる", "くれ", "こ（よ）", "こよ"] },
+    { category: "サ変", type: "サ行変格活用", word: "す", stem: "（す）", template: "verb", answers: ["せ", "し", "す", "する", "すれ", "せよ"], options: ["さ", "し", "す", "せ", "そ", "する", "すれ", "せよ", "すよ"] },
+    { category: "サ変", type: "サ行変格活用", word: "愛す", stem: "愛", template: "verb", answers: ["せ", "し", "す", "する", "すれ", "せよ"], options: ["さ", "し", "す", "せ", "そ", "する", "すれ", "せよ", "すよ"] },
+    { category: "サ変", type: "サ行変格活用", word: "念ず", stem: "念", template: "verb", answers: ["ぜ", "じ", "ず", "ずる", "ずれ", "ぜよ"], options: ["ざ", "じ", "ず", "ぜ", "ぞ", "ずる", "ずれ", "ぜよ", "じよ"] },
+    { category: "サ変", type: "サ行変格活用", word: "ご覧ず", stem: "ご覧", template: "verb", answers: ["ぜ", "じ", "ず", "ずる", "ずれ", "ぜよ"], options: ["ざ", "じ", "ず", "ぜ", "ぞ", "ずる", "ずれ", "ぜよ", "じよ"] },
+    { category: "ナ変", type: "ナ行変格活用", word: "死ぬ", stem: "死", template: "verb", answers: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"], options: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね", "ねよ", "なる", "なれ"] },
+    { category: "ナ変", type: "ナ行変格活用", word: "往ぬ", stem: "往", template: "verb", answers: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね"], options: ["な", "に", "ぬ", "ぬる", "ぬれ", "ね", "ねよ", "なる", "なれ"] },
+    { category: "ラ変", type: "ラ行変格活用", word: "あり", stem: "あ", template: "verb", answers: ["ら", "り", "り", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "りる", "りれ", "らん", "ある"] },
+    { category: "ラ変", type: "ラ行変格活用", word: "をり", stem: "を", template: "verb", answers: ["ら", "り", "り", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "りる", "りれ", "らん", "ある"] },
+    { category: "ラ変", type: "ラ行変格活用", word: "はべり", stem: "はべ", template: "verb", answers: ["ら", "り", "り", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "りる", "りれ", "らん", "ある"] },
+    { category: "ラ変", type: "ラ行変格活用", word: "いまそかり", stem: "いまそか", template: "verb", answers: ["ら", "り", "り", "る", "れ", "れ"], options: ["ら", "り", "る", "れ", "ろ", "りる", "りれ", "らん", "ある"] },
+    { category: "形容詞", type: "ク活用", word: "なし", stem: "な", template: "adj", answers: ["く", "から", "く", "かり", "し", "き", "かる", "けれ", "かれ"], options: ["く", "から", "かり", "し", "き", "かる", "けれ", "かれ"] },
+    { category: "形容詞", type: "ク活用", word: "清し", stem: "清", template: "adj", answers: ["く", "から", "く", "かり", "し", "き", "かる", "けれ", "かれ"], options: ["く", "から", "かり", "し", "き", "かる", "けれ", "かれ"] },
+    { category: "形容詞", type: "ク活用", word: "よし", stem: "よ", template: "adj", answers: ["く", "から", "く", "かり", "し", "き", "かる", "けれ", "かれ"], options: ["く", "から", "かり", "し", "き", "かる", "けれ", "かれ"] },
+    { category: "形容詞", type: "シク活用", word: "悪し", stem: "悪", template: "adj", answers: ["しく", "しから", "しく", "しかり", "し", "しき", "しかる", "しけれ", "しかれ"], options: ["しく", "しから", "しかり", "し", "しき", "しかる", "しけれ", "しかれ"] },
+    { category: "形容詞", type: "シク活用", word: "いみじ", stem: "いみ", template: "adj", answers: ["じく", "じから", "じく", "じかり", "じ", "じき", "じかる", "じけれ", "じかれ"], options: ["じく", "じから", "じかり", "じ", "じき", "じかる", "じけれ", "じかれ"] },
+    { category: "形容詞", type: "シク活用", word: "美し", stem: "美", template: "adj", answers: ["しく", "しから", "しく", "しかり", "し", "しき", "しかる", "しけれ", "しかれ"], options: ["しく", "しから", "しかり", "し", "しき", "しかる", "しけれ", "しかれ"] },
+    { category: "形容動詞", type: "ナリ活用", word: "あはれなり", stem: "あはれ", template: "adjv_nari", answers: ["なら", "なり", "に", "なり", "なる", "なれ", "なれ"], options: ["なら", "なり", "に", "なる", "なれ", "たる", "と", "たら"] },
+    { category: "形容動詞", type: "ナリ活用", word: "静かなり", stem: "静か", template: "adjv_nari", answers: ["なら", "なり", "に", "なり", "なる", "なれ", "なれ"], options: ["なら", "なり", "に", "なる", "なれ", "たる", "と", "たら"] },
+    { category: "形容動詞", type: "タリ活用", word: "堂々たり", stem: "堂々", template: "adjv_tari", answers: ["たら", "たり", "と", "たり", "たる", "たれ", "たれ"], options: ["たら", "たり", "と", "たる", "たれ", "なら", "に", "なる"] },
+    { category: "形容動詞", type: "タリ活用", word: "漫々たり", stem: "漫々", template: "adjv_tari", answers: ["たら", "たり", "と", "たり", "たる", "たれ", "たれ"], options: ["たら", "たり", "と", "たる", "たれ", "なら", "に", "なる"] }
+  ];
+
+  let gameQuestions = [];
+  const maxStage = 7;
+  const qPerStage = 5;
+  let currentStage = 1;
+  let stageQuestions = [];
+  let currentQInStage = 0;
+  
+  let currentBlankIndex = 0;
+  let stageAttempts = 0;
+  let stageCorrect = 0;
+  let lastMode = 'sequence';
+
+  window.onload = function() {
+    const container = document.getElementById('category-checkboxes');
+    CATEGORY_ORDER.forEach(cat => {
+      // デフォルトチェックなし
+      container.innerHTML += `
+        <label class="category-label">
+          <input type="checkbox" value="${cat}" class="cat-checkbox"> ${cat}
+        </label>
+      `;
+    });
+  };
+
+  function toggleCategories(selectAll) {
+    const checkboxes = document.querySelectorAll('.cat-checkbox');
+    checkboxes.forEach(cb => cb.checked = selectAll);
+  }
+
+  function toFullWidth(num) {
+    return String(num).replace(/[0-9]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
+    });
+  }
+
+  function generateTable(template, stem) {
+    const headers = ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"];
+    let html = '<table class="vertical-table">';
+    const stemHtml = `<span class="stem-text">${stem}</span>`;
+    
+    if (template === 'verb') {
+      for(let i=0; i<6; i++) {
+        html += `<tr><th>${headers[i]}</th><td>${stemHtml}<span class="blank" id="c${i}"></span></td></tr>`;
+      }
+    } else if (template === 'adj') {
+      const blanks = [[0, 1], [2, 3], [4], [5, 6], [7], [8]];
+      for(let i=0; i<6; i++) {
+        html += `<tr><th>${headers[i]}</th><td>${stemHtml}`;
+        if (blanks[i].length === 2) {
+          html += `<span class="blank" id="c${blanks[i][0]}"></span><br><span class="blank" id="c${blanks[i][1]}"></span>`;
+        } else {
+          html += `<span class="blank" id="c${blanks[i][0]}"></span>`;
+        }
+        html += `</td></tr>`;
+      }
+    } else if (template === 'adjv_nari' || template === 'adjv_tari') {
+      const blanks = [[0], [1, 2], [3], [4], [5], [6]];
+      for(let i=0; i<6; i++) {
+        html += `<tr><th>${headers[i]}</th><td>${stemHtml}`;
+        if (blanks[i].length === 2) {
+          html += `<span class="blank" id="c${blanks[i][0]}"></span><br><span class="blank" id="c${blanks[i][1]}"></span>`;
+        } else {
+          html += `<span class="blank" id="c${blanks[i][0]}"></span>`;
+        }
+        html += `</td></tr>`;
+      }
+    }
+    html += '</table>';
+    return html;
+  }
+
+  function updateScoreBoard() {
+    document.getElementById('score-attempts').innerText = stageAttempts;
+    document.getElementById('score-correct').innerText = stageCorrect;
+    let accuracy = stageAttempts === 0 ? 0 : Math.round((stageCorrect / stageAttempts) * 100);
+    document.getElementById('score-accuracy').innerText = accuracy + "%";
+  }
+
+  function saveDailyStats(isCorrect) {
+    const today = new Date().toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'});
+    let stats = JSON.parse(localStorage.getItem('yogen_challenge_stats') || '{}');
+    if (!stats[today]) stats[today] = { attempts: 0, correct: 0 };
+    stats[today].attempts++;
+    if (isCorrect) stats[today].correct++;
+    localStorage.setItem('yogen_challenge_stats', JSON.stringify(stats));
+  }
+
+  // クエスト全体を初期化する
+  function initGame(mode) {
+    const selectedCats = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
+    if (selectedCats.length === 0) {
+      alert("出題する活用の種類を1つ以上選択してください！");
+      return;
+    }
+
+    lastMode = mode;
+    let filtered = baseQuestions.filter(q => selectedCats.includes(q.category));
+    gameQuestions = [];
+
+    if (mode === 'sequence') {
+      const STAGE_TARGETS = [
+        ["四段"],
+        ["上二段"],
+        ["下二段"],
+        ["上一段", "下一段"],
+        ["カ変", "サ変"],
+        ["ナ変", "ラ変"],
+        ["形容詞", "形容動詞"]
+      ];
+
+      for (let i = 0; i < maxStage; i++) {
+        let targets = STAGE_TARGETS[i].filter(cat => selectedCats.includes(cat));
+        let pool = [];
+        if (targets.length > 0) {
+          pool = baseQuestions.filter(q => targets.includes(q.category));
+        } else {
+          pool = filtered;
+        }
+
+        pool.sort(() => Math.random() - 0.5);
+        let stageQs = [];
+        let pIdx = 0;
+        while (stageQs.length < qPerStage) {
+          stageQs.push(pool[pIdx % pool.length]);
+          pIdx++;
+        }
+        gameQuestions = gameQuestions.concat(stageQs);
+      }
+    } else {
+      filtered.sort(() => Math.random() - 0.5);
+      while (gameQuestions.length < maxStage * qPerStage) {
+        gameQuestions = gameQuestions.concat(filtered);
+      }
+      gameQuestions = gameQuestions.slice(0, maxStage * qPerStage);
+    }
+
+    currentStage = 1;
+    showStageStartPage();
+  }
+
+  // ステージ開始画面を表示
+  function showStageStartPage() {
+    hideAllPages();
+    document.getElementById('stage-start-page').style.display = 'block';
+    document.getElementById('stage-title-text').innerText = `STAGE ${currentStage}`;
+    
+    // ボス絵文字の設定と巨大化（ステージが進むほど大きくなる）
+    const bossEmoji = document.getElementById('boss-emoji');
+    bossEmoji.innerText = BOSSES[currentStage - 1];
+    const scale = 1 + (currentStage - 1) * 0.2;
+    bossEmoji.style.transform = `scale(${scale})`;
+  }
+
+  function startStageQuestions() {
+    stageQuestions = gameQuestions.slice((currentStage - 1) * qPerStage, currentStage * qPerStage);
+    currentQInStage = 0;
+    stageAttempts = 0;
+    stageCorrect = 0;
+    
+    hideAllPages();
+    document.getElementById('quiz-page').style.display = 'block';
+    
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    const q = stageQuestions[currentQInStage];
+    currentBlankIndex = 0;
+    updateScoreBoard();
+    
+    document.getElementById('q-number-badge').innerText = `Ｑ${toFullWidth(currentQInStage + 1)}`;
+    
+    let hideType = false;
+    if (lastMode === 'random') {
+      if (currentStage >= 5) {
+        hideType = true;
+      } else if (currentStage === 3 || currentStage === 4) {
+        if (currentQInStage % 2 === 1) { 
+          hideType = true;
+        }
+      }
+    }
+
+    let typeDisplay = hideType ? '<span id="q-type-text">？？？</span>' : `<span id="q-type-text">${q.type}</span>`;
+
+    // RPG風のエンカウントテキスト
+    document.getElementById('quiz-header').innerHTML = 
+      `<div style="text-align: center;">
+         <span class="highlight-word">「${q.word}」</span><br>
+         <span class="monster-text">があらわれた！</span><br>
+         （${typeDisplay}）
+       </div>`;
+      
+    document.getElementById('table-container').innerHTML = generateTable(q.template, q.stem);
+    
+    document.getElementById('complete-popup').style.display = 'none';
+    document.getElementById('next-btn-container').style.visibility = 'hidden';
+    
+    let uniqueAnswers = [...new Set(q.answers)];
+    let optionsPool = [...new Set([...uniqueAnswers, ...q.options])];
+    
+    let choices = [...uniqueAnswers];
+    let dummies = optionsPool.filter(opt => !uniqueAnswers.includes(opt));
+    dummies.sort(() => Math.random() - 0.5);
+    
+    for(let i=0; i < dummies.length && choices.length < 8; i++) {
+      choices.push(dummies[i]);
+    }
+    while(choices.length < 8) choices.push("・"); 
+    
+    choices.sort(() => Math.random() - 0.5); 
+    
+    const choicesHtml = choices.map(choice => 
+      `<button class="choice-btn" onclick="checkAnswer('${choice}')">${choice}</button>`
+    ).join('');
+    
+    document.getElementById('choices-container').innerHTML = choicesHtml;
+
+    updateHighlight();
+  }
+
+  function updateHighlight() {
+    const q = stageQuestions[currentQInStage];
+    
+    if (currentBlankIndex > 0) {
+      document.getElementById(`c${currentBlankIndex - 1}`).classList.remove('highlight');
+      document.getElementById(`c${currentBlankIndex - 1}`).style.borderLeft = 'none';
+    }
+    
+    if (currentBlankIndex < q.answers.length) {
+      const targetCell = document.getElementById(`c${currentBlankIndex}`);
+      targetCell.classList.add('highlight');
+      targetCell.innerText = "？";
+    } else {
+      // 1問(表1つ)が完成したら、隠していた活用の種類を表示する
+      const typeSpan = document.getElementById('q-type-text');
+      if (typeSpan && typeSpan.innerText === '？？？') {
+        typeSpan.innerText = q.type;
+      }
+
+      // 1問(表1つ)が完成したらリザルトへ
+      showCompletePopup();
+    }
+  }
+
+  function checkAnswer(selected) {
+    const q = stageQuestions[currentQInStage];
+    if (currentBlankIndex >= q.answers.length) return; 
+    
+    const correctAnswer = q.answers[currentBlankIndex];
+    const targetCell = document.getElementById(`c${currentBlankIndex}`);
+    
+    stageAttempts++;
+    let isCorrect = (selected === correctAnswer);
+    
+    saveDailyStats(isCorrect);
+    
+    if (isCorrect) {
+      stageCorrect++;
+      targetCell.innerText = correctAnswer;
+      currentBlankIndex++;
+      updateHighlight();
+    } else {
+      targetCell.style.backgroundColor = '#e74c3c';
+      targetCell.style.color = '#fff';
+      setTimeout(() => {
+        targetCell.style.backgroundColor = '#f1c40f';
+        targetCell.style.color = '#2c3e50';
+      }, 300);
+    }
+    
+    updateScoreBoard();
+  }
+
+  function showCompletePopup() {
+    let accuracy = stageAttempts === 0 ? 0 : Math.round((stageCorrect / stageAttempts) * 100);
+    document.getElementById('popup-accuracy').innerText = `命中率: ${accuracy}%`;
+    
+    const popupTitle = document.getElementById('popup-title');
+    const ribbon = document.getElementById('popup-ribbon');
+    const nextBtnContainer = document.getElementById('next-btn-container');
+    const nextBtn = document.getElementById('next-btn');
+    
+    // ステージ内の1〜4問目
+    if (currentQInStage < qPerStage - 1) {
+      ribbon.innerText = "✨ Good! ✨";
+      popupTitle.innerText = "Clear! 🎉";
+      nextBtn.innerText = "次の問題へ ➔";
+      nextBtn.onclick = goToNextQ;
+      
+      document.getElementById('complete-popup').style.display = 'flex';
+      nextBtnContainer.style.visibility = 'visible';
+    } 
+    // ステージの最終問題（5問目）
+    else {
+      if (accuracy >= 80) {
+        if (currentStage === maxStage) {
+          // ラスボス撃破！
+          ribbon.innerText = "✨ AMAZING! ✨";
+          popupTitle.innerText = "Stageクリア! 🎉";
+          nextBtn.innerText = "エンディングへ ✨";
+          nextBtn.style.backgroundColor = "#f1c40f";
+          nextBtn.style.color = "#2c3e50";
+          nextBtn.onclick = showQuestClearPage;
+        } else {
+          // 通常のステージクリア
+          ribbon.innerText = "✨ Stage Cleared! ✨";
+          popupTitle.innerText = "Stageクリア! 🎉";
+          nextBtn.innerText = "次のステージへ ➔";
+          nextBtn.onclick = goToNextStage;
+        }
+        document.getElementById('complete-popup').style.display = 'flex';
+        nextBtnContainer.style.visibility = 'visible';
+      } else {
+        // 80%未満はゲームオーバー画面へ直行
+        showGameOverPage();
+      }
+    }
+  }
+
+  function goToNextQ() {
+    currentQInStage++;
+    loadQuestion();
+  }
+
+  function goToNextStage() {
+    currentStage++;
+    showStageStartPage();
+  }
+
+  // ---- 敗北画面 ----
+  function showGameOverPage() {
+    hideAllPages();
+    document.getElementById('gameover-page').style.display = 'block';
+  }
+
+  function retryStage() {
+    showStageStartPage();
+  }
+
+  function retryFromFirst() {
+    initGame(lastMode);
+  }
+
+  // ---- エンディング画面 ----
+  function showQuestClearPage() {
+    hideAllPages();
+    document.getElementById('quest-clear-page').style.display = 'block';
+    // ラスボス撃破アニメーション発動
+    const finalBoss = document.getElementById('final-boss-emoji');
+    finalBoss.classList.remove('boss-defeat'); // 一旦外す
+    void finalBoss.offsetWidth; // リフローを強制してアニメーションをリセット
+    finalBoss.classList.add('boss-defeat');
+  }
+
+  // ---- ユーティリティ ----
+  function hideAllPages() {
+    document.getElementById('top-page').style.display = 'none';
+    document.getElementById('stage-start-page').style.display = 'none';
+    document.getElementById('quiz-page').style.display = 'none';
+    document.getElementById('stats-page').style.display = 'none';
+    document.getElementById('gameover-page').style.display = 'none';
+    document.getElementById('quest-clear-page').style.display = 'none';
+  }
+
+  function goHome() {
+    hideAllPages();
+    document.getElementById('top-page').style.display = 'block';
+    document.getElementById('complete-popup').style.display = 'none';
+  }
+
+  // ---- 成績ページ表示関数 ----
+  function showStatsPage() {
+    hideAllPages();
+    document.getElementById('stats-page').style.display = 'block';
+
+    const stats = JSON.parse(localStorage.getItem('yogen_challenge_stats') || '{}');
+    const dates = Object.keys(stats).sort();
+
+    let tableHtml = '<tr><th>日付</th><th>攻撃回数(解答)</th><th>クリティカル(正解)</th><th>命中率</th></tr>';
+    let chartHtml = '';
+
+    if (dates.length === 0) {
+      tableHtml += '<tr><td colspan="4">まだ冒険の記録がありません。<br>クエストに出発して記録を残そう！</td></tr>';
+    } else {
+      dates.forEach(date => {
+        const s = stats[date];
+        const accuracy = s.attempts === 0 ? 0 : Math.round((s.correct / s.attempts) * 100);
+        
+        tableHtml += `<tr>
+          <td>${date}</td>
+          <td>${s.attempts} 回</td>
+          <td>${s.correct} 回</td>
+          <td style="font-weight:bold; color:#e67e22;">${accuracy}%</td>
+        </tr>`;
+
+        const shortDate = date.substring(5); 
+        chartHtml += `
+          <div class="bar-wrapper">
+            <div class="bar" style="height: ${accuracy}%;">
+              <span class="bar-value">${accuracy}%</span>
+            </div>
+            <div class="bar-label">${shortDate}</div>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById('stats-table').innerHTML = tableHtml;
+    document.getElementById('stats-chart').innerHTML = chartHtml;
+  }
+
+  function clearStats() {
+    if (confirm('本当にすべての冒険の記録を消去しますか？\n（この操作は元に戻せません）')) {
+      localStorage.removeItem('yogen_challenge_stats');
+      showStatsPage(); 
+    }
+  }
+
+</script>
+
+</body>
+</html>
