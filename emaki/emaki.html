@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古典文法 百人一首絵巻 ver.11.20</title>
+<style>
+body{font-family:'Hiragino Mincho ProN','MS PMincho',serif;background-color:#fff0f5;margin:0;padding:0;overflow-x:hidden;text-align:center}.screen{display:none;padding:20px;min-height:100vh;box-sizing:border-box}.active{display:block}h1,h2{color:#d0104c;text-shadow:2px 2px 4px #ffb6c1}button{background-color:#d0104c;color:white;border:none;cursor:pointer;margin:10px;box-shadow:0 4px 6px rgba(0,0,0,0.2);transition:0.3s}button:hover:not(:disabled){background-color:#e83929;transform:translateY(-2px)}button:disabled{opacity:0.5;cursor:not-allowed;box-shadow:none;transform:none}.correct-btn{background-color:#0000cd!important;color:white!important;border:none!important;opacity:1!important;font-weight:bold}.feedback-pop{font-size:36px!important;font-weight:900!important;margin:0;text-shadow:2px 2px 0px #fff,-2px -2px 0px #fff,2px -2px 0px #fff,-2px 2px 0px #fff,3px 3px 6px rgba(0,0,0,0.3);letter-spacing:2px;animation:popAnim 0.5s cubic-bezier(0.175,0.885,0.32,1.275)}@keyframes popAnim{0%{transform:scale(0.5) rotate(-10deg);opacity:0}50%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0deg);opacity:1}}.custom-alert-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center}.custom-alert-box{background:#ffffff;border:3px solid #4a8bc2;border-radius:15px;padding:25px 30px;max-width:400px;width:85%;box-shadow:0 10px 25px rgba(74,139,194,0.25);text-align:center}.custom-alert-msg{font-size:16px;font-weight:bold;color:#333;margin-bottom:20px;line-height:1.5}.custom-alert-btns{display:flex;justify-content:center;gap:15px}#top-screen{position:relative;z-index:1;background:linear-gradient(135deg,#fdfbfb 0%,#ffe4e1 100%);overflow:hidden}.bg-chars{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}.floating-char-wrap{position:absolute;width:180px;height:180px;border-radius:50%;overflow:hidden;opacity:0.55;animation:floatAnim 10s infinite ease-in-out alternate;border:3px solid #ffb6c1;box-shadow:0 4px 10px rgba(0,0,0,0.1);background-color:#fff}.floating-char-wrap img{width:100%;height:100%;object-fit:cover!important;transform:scale(1.28)}@keyframes floatAnim{0%{transform:translateY(0px) rotate(0deg) scale(0.98)}50%{transform:translateY(-18px) rotate(8deg) scale(1.02)}100%{transform:translateY(18px) rotate(-6deg) scale(1)}}.top-controls{position:relative;z-index:10}.btn-start{font-size:20px;padding:15px 35px;border-radius:40px;font-weight:bold;background-color:#ff4500;border:3px solid #ffd700;margin:5px}.btn-small{font-size:14px;padding:10px 20px;border-radius:20px;background-color:#4a8bc2}.btn-reset{background-color:#666!important}.btn-ctrl{background-color:#333;font-size:12px;padding:5px 10px;border-radius:10px}.verb-select{position:relative;z-index:10;background:rgba(255,255,255,0.95);padding:20px 30px;border-radius:15px;display:inline-block;text-align:left;margin-bottom:20px;border:2px solid #ffb6c1;box-shadow:0 0 15px rgba(255,182,193,0.5);width:90%;max-width:600px}.verb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:13px;margin-top:15px}.verb-item{display:flex;align-items:flex-start}.verb-category{width:70px;flex-shrink:0;white-space:nowrap;background:#ffe4e1;padding:4px;border-radius:5px;font-weight:bold;text-align:center;margin-right:10px;font-size:12px}.verb-item label{cursor:pointer;flex-grow:1;padding-left:1.5em;text-indent:-1.5em;line-height:1.4}.character-container{position:relative;width:350px;height:350px;margin:0 auto 20px;border-radius:50%;box-shadow:0 0 20px rgba(0,0,0,0.15);overflow:hidden;background-color:#fff}.character-img{width:100%;height:100%;object-fit:cover;clip-path:circle(50% at 50% 50%);filter:grayscale(40%);transition:0.5s;pointer-events:none}.character-img.custom-full-img{transform:scale(1)!important;clip-path:none!important;filter:grayscale(0%)!important;border-radius:15px;object-fit:contain!important}.character-img.freed{filter:grayscale(0%)}.trap-part-svg{transition:opacity 0.5s ease,filter 0.2s;cursor:pointer;pointer-events:all!important}.trap-part-svg:hover{filter:brightness(1.35) contrast(1.1)}.trap-part-hidden{opacity:0!important;visibility:hidden!important;pointer-events:none!important}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto}.modal-content{text-align:left;background:white;padding:30px;border-radius:15px;width:90%;max-width:600px;position:relative;margin:40px auto}#quiz-question{width:100%;box-sizing:border-box;display:block;font-size:18px;margin-top:0;font-weight:bold;color:#333;text-align:left;line-height:1.6}.highlight-word{color:#d0104c;font-weight:bold}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:15px}.choices button{width:100%;margin:0;background-color:#4a8bc2;padding:15px;border-radius:10px;font-size:16px;border:3px solid transparent;text-align:center}#quiz-verb-info{display:none;font-size:14px;margin:20px auto 0;border:2px solid #ffd700;padding:20px;border-radius:10px;background-color:#fffaf0;text-align:center;white-space:nowrap!important;overflow:auto;height:600px;max-width:100%;box-sizing:border-box}.vertical-container{display:inline-block;vertical-align:top;writing-mode:vertical-rl;text-orientation:upright;-webkit-text-orientation:upright;height:530px;margin:0 15px;text-align:left;white-space:normal}#quiz-verb-table{border-collapse:collapse;background-color:white;margin:0}.exp-para-block{font-weight:bold;color:#d0104c;font-size:14px;margin:0;line-height:1.8;padding-top:6em;text-indent:-6em;font-feature-settings:'pkna' 0,'palt' 0}.info-box{background:white;padding:25px;border-radius:15px;max-width:650px;margin:20px auto;border:3px solid #ffd700;text-align:left;line-height:1.6;position:relative}.info-box h3{text-align:center;margin-top:0;font-size:24px;margin-bottom:20px}.info-section{margin-bottom:15px;padding-bottom:15px;border-bottom:1px dashed #ccc}.info-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}.info-label{color:#d0104c;font-weight:bold;display:block;margin-bottom:5px}.silhouette-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;max-width:800px;margin:0 auto}.sil-char{width:100px;height:100px;background:#ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;border:2px solid #fff;overflow:hidden;transition:0.2s;cursor:pointer;color:#555}.sil-char:hover{transform:scale(1.08);box-shadow:0 0 12px rgba(208,16,76,0.4)}.sil-char.cleared{background:transparent;border:2px solid #d0104c;cursor:pointer!important}.sil-char img{width:100%;height:100%;object-fit:cover;pointer-events:none!important}#ending-screen{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff0f5 0%,#ffe4e1 100%)}.congrats-banner{font-size:42px;font-weight:900;color:#ff1493;text-shadow:3px 3px 0px #ffd700,-2px -2px 0px #fff;margin:10px 0;animation:neonGlow 1s ease-in-out infinite alternate}@keyframes neonGlow{from{transform:scale(0.98);filter:drop-shadow(0 0 5px #ff69b4)}to{transform:scale(1.05);filter:drop-shadow(0 0 15px #ff1493)}}.kusudama-wrapper{display:flex;justify-content:center;align-items:center;gap:30px;margin:10px 0;font-size:50px}.kusudama-ball{font-size:65px}.cracker-left{transform:rotate(-20deg);animation:crackerBounce 0.5s infinite alternate}.cracker-right{transform:rotate(20deg) scaleX(-1);animation:crackerBounce 0.5s infinite alternate}@keyframes crackerBounce{from{transform:translateY(0) rotate(-20deg)}to{transform:translateY(-10px) rotate(-15deg)}}.confetti-container{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}.confetti{position:absolute;width:10px;height:16px;opacity:0.8;animation:confettiFall linear infinite}@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}#dance-stage{display:flex;flex-wrap:wrap;justify-content:center;padding:30px 0;background-color:#fff0f5;gap:10px;border-radius:20px;margin-top:15px;border:3px solid #ffb6c1}.dancer{width:65px;height:65px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:bounce 0.6s infinite alternate;font-size:10px;font-weight:bold;border:2px solid #d0104c;overflow:hidden;cursor:pointer;transition:transform 0.2s}.dancer:hover{transform:scale(1.15)!important;box-shadow:0 0 10px #d0104c}@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-40px)}}
+</style>
+</head>
+<body>
+
+<div id="custom-alert-modal" class="custom-alert-modal">
+  <div class="custom-alert-box"><p id="custom-alert-msg" class="custom-alert-msg"></p><div id="custom-alert-btns" class="custom-alert-btns"></div></div>
+</div>
+
+<div id="top-screen" class="screen active">
+  <div class="bg-chars" id="bg-chars-container"></div>
+  <div class="top-controls">
+    <h1 style="font-size:3em;color:#d0104c;text-shadow:2px 2px 4px #ffb6c1;">古典文法 百人一首絵巻</h1>
+    <div class="verb-select">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <p style="margin:0;"><b>対象となる助動詞を選択：</b></p>
+        <div>
+          <button type="button" class="btn-ctrl" onclick="window.toggleCheckboxes(true)">すべて選択</button>
+          <button type="button" class="btn-ctrl" onclick="window.toggleCheckboxes(false)">すべて解除</button>
+        </div>
+      </div>
+      <div class="verb-grid" id="verb-checkboxes">
+        <div class="verb-item"><div class="verb-category">過去</div><label><input type="checkbox" checked value="kako"> き・けり</label></div>
+        <div class="verb-item"><div class="verb-category">完了</div><label><input type="checkbox" checked value="kanryo"> つ・ぬ<br>・たり・り</label></div>
+        <div class="verb-item"><div class="verb-category">断定</div><label><input type="checkbox" checked value="dantei"> なり・たり</label></div>
+        <div class="verb-item"><div class="verb-category">打消</div><label><input type="checkbox" checked value="uchikeshi"> ず</label></div>
+        <div class="verb-item"><div class="verb-category">推量</div><label><input type="checkbox" checked value="suiryo"> む・むず<br>・べし</label></div>
+        <div class="verb-item"><div class="verb-category">打消推量</div><label><input type="checkbox" checked value="uchikeshi_suiryo"> じ・まじ</label></div>
+        <div class="verb-item"><div class="verb-category">現在推量</div><label><input type="checkbox" checked value="genzai_suiryo"> らむ</label></div>
+        <div class="verb-item"><div class="verb-category">過去推量</div><label><input type="checkbox" checked value="kako_suiryo"> けむ</label></div>
+        <div class="verb-item"><div class="verb-category">推定</div><label><input type="checkbox" checked value="suitei"> らし・めり</label></div>
+        <div class="verb-item"><div class="verb-category">推定伝聞</div><label><input type="checkbox" checked value="denbun"> なり</label></div>
+        <div class="verb-item"><div class="verb-category">反実仮想</div><label><input type="checkbox" checked value="hanjitsu"> まし</label></div>
+        <div class="verb-item"><div class="verb-category">自発等</div><label><input type="checkbox" checked value="ukemi"> る・らる</label></div>
+        <div class="verb-item"><div class="verb-category">使役等</div><label><input type="checkbox" checked value="shieki"> す・さす<br>・しむ</label></div>
+        <div class="verb-item"><div class="verb-category">願望</div><label><input type="checkbox" checked value="ganbo"> まほし・たし</label></div>
+        <div class="verb-item"><div class="verb-category">比況</div><label><input type="checkbox" checked value="hikyo"> ごとし<br>・ごとくなり</label></div>
+      </div>
+    </div><br>
+    <div><button type="button" class="btn-start" onclick="window.openPictureBook(false)">設定完了</button></div>
+  </div>
+</div>
+
+<div id="game-screen" class="screen">
+  <div style="position:relative;max-width:500px;margin:0 auto 10px;display:flex;justify-content:center;align-items:center;height:40px;">
+    <h2 id="stage-title" style="margin:0;text-align:center;">ステージ 1</h2>
+    <button type="button" id="btn-top-back" class="btn-ctrl" style="position:absolute;right:-5em;margin:0;background-color:#666;padding:8px 15px;font-size:14px;" onclick="window.openPictureBook(false)">歌人一覧へ</button>
+  </div>
+  <p id="stage-instruction-text" style="margin:0 0 15px 0;font-weight:bold;color:#333;font-size:14px;">※ パネルの一部を押すと出題されます</p>
+  <div class="character-container">
+    <img src="" alt="" class="character-img" id="char-img">
+    <svg id="puzzle-panel" width="350" height="350" viewBox="0 0 350 350" style="position:absolute;top:0;left:0;z-index:50;border-radius:50%;">
+      <defs>
+        <pattern id="p1" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#e87a90"/><path d="M20 4 L20 36 M4 20 L36 20 M8.7 8.7 L31.3 31.3 M8.7 31.3 L31.3 8.7" stroke="#fff" stroke-width="1.2"/></pattern>
+        <pattern id="p2" width="40" height="20" patternUnits="userSpaceOnUse"><rect width="40" height="20" fill="#2ea9df"/><path d="M0,20 A20,20 0 0,1 40,20 M5,20 A15,15 0 0,1 35,20 M10,20 A10,10 0 0,1 30,20 M15,20 A5,5 0 0,1 25,20" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M -20,0 A 20,20 0 0,1 20,0 M -15,0 A 15,15 0 0,1 15,0 M -10,0 A 10,10 0 0,1 10,0 M -5,0 A 5,5 0 0,1 5,0" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M 20,0 A 20,20 0 0,1 60,0 M 25,0 A 15,15 0 0,1 55,0 M 30,0 A 10,10 0 0,1 50,0 M 35,0 A 5,5 0 0,1 45,0" fill="none" stroke="#fff" stroke-width="1.5"/></pattern>
+        <pattern id="p3" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#f7c114"/><circle cx="15" cy="15" r="15" fill="none" stroke="#fff" stroke-width="1.5"/></pattern>
+        <pattern id="p4" width="30" height="51.96" patternUnits="userSpaceOnUse"><rect width="30" height="51.96" fill="#707c74"/><path d="M0 0 L30 51.96 M30 0 L0 51.96" stroke="#fff" stroke-width="1.2" fill="none"/></pattern>
+        <pattern id="p5" width="30" height="51.96" patternUnits="userSpaceOnUse"><rect width="30" height="51.96" fill="#6a4c9c"/><path d="M15 0 L30 8.66 L30 25.98 L15 34.64 L0 25.98 L0 8.66 Z" stroke="#fff" stroke-width="1.2" fill="none"/></pattern>
+        <pattern id="p6" width="35" height="35" patternUnits="userSpaceOnUse"><rect width="35" height="35" fill="#5c9291"/><circle cx="17.5" cy="17.5" r="10" fill="#fff" opacity="0.85"/></pattern>
+        <pattern id="p7" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#b7282e"/><path d="M0 15 C10 0, 20 30, 30 15" fill="none" stroke="#fff" stroke-width="2"/></pattern>
+        <pattern id="p8" width="20" height="30" patternUnits="userSpaceOnUse"><rect width="20" height="30" fill="#313131"/><path d="M0 0 L10 10 L20 0 L20 5 L10 15 L0 5 Z" fill="#fff" opacity="0.8"/></pattern>
+        <pattern id="p9" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#19448e"/><rect width="12" height="12" fill="#fff" opacity="0.75"/></pattern>
+        <pattern id="p10" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#ed6d3d"/><path d="M0 5 H15 V15 H30" stroke="#fff" stroke-width="1.8" fill="none"/></pattern>
+        <pattern id="p11" width="30" height="51.96" patternUnits="userSpaceOnUse"><rect width="30" height="51.96" fill="#00aa6c"/><path d="M15 0 L30 8.66 L30 25.98 L15 34.64 L0 25.98 L0 8.66 Z" fill="none" stroke="#fff" stroke-width="1.8"/></pattern>
+        <pattern id="p12" width="40" height="30" patternUnits="userSpaceOnUse"><rect width="40" height="30" fill="#bb8b8b"/><path d="M5 25 A20 20 0 0 1 35 25 Z" fill="none" stroke="#fff" stroke-width="1.5"/></pattern>
+        <pattern id="p13" width="40" height="24" patternUnits="userSpaceOnUse"><rect width="40" height="24" fill="#5a1846"/><path d="M20 0 L40 12 L20 24 L0 12 Z" fill="none" stroke="#fff" stroke-width="1.5"/></pattern>
+      </defs>
+      <g stroke="#ffffff" stroke-width="4">
+        <g id="trap-1" class="trap-part-svg"><path id="svg-path-1" d="M 175,0 A 175,175 0 0,0 0,175 L 105,175 A 70,70 0 0,1 175,105 Z" fill="url(#p1)"/></g>
+        <g id="trap-2" class="trap-part-svg"><path id="svg-path-2" d="M 175,0 A 175,175 0 0,1 350,175 L 245,175 A 70,70 0 0,0 175,105 Z" fill="url(#p1)"/></g>
+        <g id="trap-3" class="trap-part-svg"><path id="svg-path-3" d="M 0,175 A 175,175 0 0,0 175,350 L 175,245 A 70,70 0 0,1 105,175 Z" fill="url(#p1)"/></g>
+        <g id="trap-4" class="trap-part-svg"><path id="svg-path-4" d="M 350,175 A 175,175 0 0,1 175,350 L 175,245 A 70,70 0 0,0 245,175 Z" fill="url(#p1)"/></g>
+        <g id="trap-5" class="trap-part-svg"><circle id="svg-path-5" cx="175" cy="175" r="70" fill="url(#p1)"/></g>
+      </g>
+    </svg>
+  </div>
+  <div id="charafreed-info" class="info-box" style="display:none;">
+    <div style="position:absolute;top:15px;right:15px;"><button type="button" class="btn-small" style="margin:0;background-color:#2e8b57;" onclick="window.openPictureBook(true)">歌人一覧に進む</button></div>
+    <h3 id="freed-name" style="margin-top:10px;">人物名</h3>
+    <div class="info-section"><span class="info-label">【百人一首にある歌】</span><span id="freed-poem"></span></div>
+    <div class="info-section"><span class="info-label">【現代語訳（解説）】</span><span id="freed-trans"></span></div>
+    <div class="info-section"><span class="info-label">【人物紹介】</span><span id="freed-bio"></span></div>
+  </div>
+</div>
+
+<div id="quiz-modal" class="modal">
+  <div class="modal-content">
+    <p id="quiz-question"></p>
+    <div class="choices" id="quiz-choices"></div>
+    <div style="display:flex;justify-content:center;align-items:center;gap:20px;margin-top:15px;">
+      <p id="quiz-feedback" class="feedback-pop" style="display:none;text-align:center;"></p>
+      <button type="button" id="btn-next-quiz" class="btn-small" style="display:none;margin:0;" onclick="window.nextQuiz()">次へ</button>
+      <button type="button" id="btn-close-quiz" class="btn-small" style="display:none;margin:0;background-color:#666;" onclick="window.closeQuiz()">戻る</button>
+    </div>
+    <div id="quiz-verb-info">
+      <div class="vertical-container">
+        <table id="quiz-verb-table">
+          <tr><th style="border:1px solid #ccc;padding:10px 5px;background:#ffe4e1;white-space:nowrap;">助動詞</th><th style="border:1px solid #ccc;padding:10px 5px;background:#ffe4e1;white-space:nowrap;">意味</th><th style="border:1px solid #ccc;padding:10px 5px;background:#ffe4e1;white-space:nowrap;">接続</th><th style="border:1px solid #ccc;padding:10px 5px;background:#ffe4e1;white-space:nowrap;">活用表</th><th style="border:1px solid #ccc;padding:10px 5px;background:#ffe4e1;white-space:nowrap;">訳し方</th></tr>
+          <tr><td style="border:1px solid #ccc;padding:10px 5px;font-weight:bold;font-size:14px;color:#d0104c;white-space:nowrap;" id="verb-name"></td><td style="border:1px solid #ccc;padding:10px 5px;white-space:nowrap;" id="verb-imi"></td><td style="border:1px solid #ccc;padding:10px 5px;white-space:nowrap;" id="verb-setsuzoku"></td><td style="border:1px solid #ccc;padding:10px 5px;white-space:nowrap;" id="verb-katsuyo"></td><td style="border:1px solid #ccc;padding:10px 5px;background:#ffffff;white-space:nowrap;" id="verb-yaku"></td></tr>
+        </table>
+      </div>
+      <div class="vertical-container" id="quiz-explanation-container"></div>
+    </div>
+  </div>
+</div>
+
+<div id="progress-screen" class="screen">
+  <h2>歌人一覧</h2>
+  <p id="book-guide-text" style="font-weight:bold;color:#333;"></p>
+  <div class="silhouette-grid" id="silhouette-grid"></div><br>
+  <div style="display:flex;justify-content:center;gap:20px;max-width:500px;margin:0 auto;">
+    <button type="button" class="btn-small" style="flex:1;" onclick="window.switchScreen('top-screen')">トップに戻る</button>
+    <button type="button" class="btn-small btn-reset" style="flex:1;" onclick="window.resetGame()">リセット</button>
+  </div>
+</div>
+
+<div id="character-detail-screen" class="screen">
+  <h2>歌人解説</h2>
+  <div class="info-box">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div class="sil-char cleared" style="margin:0 auto;width:120px;height:120px;pointer-events:none;border-width:3px;"><img id="detail-img" src="" alt=""></div>
+    </div>
+    <h3 id="detail-name">人物名</h3>
+    <div class="info-section"><span class="info-label">【百人一首にある歌】</span><span id="detail-poem"></span></div>
+    <div class="info-section"><span class="info-label">【現代語訳（解説）】</span><span id="detail-trans"></span></div>
+    <div class="info-section"><span class="info-label">【人物紹介】</span><span id="detail-bio"></span></div>
+    <div style="text-align:center;margin-top:15px;"><button type="button" class="btn-small" onclick="window.openPictureBook(false)">歌人一覧に戻る</button></div>
+  </div>
+</div>
+
+<div id="ending-screen" class="screen">
+  <div class="confetti-container" id="confetti-box"></div>
+  <div class="congrats-banner">🎉 CONGRATULATIONS! 🎉</div>
+  <div class="kusudama-wrapper"><span class="cracker-left">🎉</span><span class="kusudama-ball">🎊</span><span class="cracker-right">🎉</span></div>
+  <h2 style="font-size:2.2em;margin:10px 0;">祝！全13ステージクリア！</h2>
+  <p style="font-size:16px;font-weight:bold;color:#d0104c;">助動詞マスターの称号を手に入れ、歌人たちが喜びの舞を踊っています！</p>
+  <div id="dance-stage"></div><br>
+  <div style="display:flex;justify-content:center;align-items:center;gap:15px;max-width:500px;margin:0 auto;">
+    <button type="button" class="btn-start" style="flex:1;" onclick="window.switchScreen('top-screen')">トップに戻る</button>
+    <button type="button" class="btn-start btn-reset" style="flex:1;" onclick="window.resetGame()">リセット</button>
+  </div>
+</div>
+
+<script>
+var sampleImgs=["天智天皇.png","柿本人麻呂.png","小野小町.png","在原業平.png","菅原道真.png","紀貫之.png","和泉式部.png","紫式部.png","清少納言.png","西行法師.png","寂蓮法師.png","藤原定家.png","後鳥羽院.png"];
+var verbMaster={"き":{katsuyo:"せ/○/き/し/しか/○",setsuzoku:"連用形（カ・サ変は特殊）",imi:"過去",yaku:"〜た"},"けり":{katsuyo:"けら/○/けり/ける/けれ/○",setsuzoku:"連用形",imi:"過去、詠嘆",yaku:"〜た、〜たことよ"},"つ":{katsuyo:"て/て/つ/つる/つれ/てよ",setsuzoku:"連用形",imi:"完了、強意、並列",yaku:"〜てしまう、きっと〜"},"ぬ":{katsuyo:"な/に/ぬ/ぬる/ぬれ/ね",setsuzoku:"連用形",imi:"完了、強意、並列",yaku:"〜てしまう、きっと〜"},"たり（完了）":{katsuyo:"たら/たり/たり/たる/たれ/たれ",setsuzoku:"連用形",imi:"完了、存続",yaku:"〜た、〜ている"},"り":{katsuyo:"ら/り/り/る/れ/れ",setsuzoku:"サ未・四已",imi:"完了、存続",yaku:"〜た、〜ている"},"なり（断定）":{katsuyo:"なら/なり・に/なり/なる/なれ/なれ",setsuzoku:"体言・連体形",imi:"断定、存在",yaku:"〜である、〜にある"},"たり（断定）":{katsuyo:"たら/たり・と/たり/たる/たれ/たれ",setsuzoku:"体言",imi:"断定",yaku:"〜である"},"ず":{katsuyo:"ず・ざら/ず・ざり/ず/ぬ・ざる/ね・ざれ/ざれ",setsuzoku:"未然形",imi:"打消",yaku:"〜ない"},"む":{katsuyo:"○/○/む/む/め/○",setsuzoku:"未然形",imi:"推量、意志など",yaku:"〜だろう、〜よう"},"むず":{katsuyo:"○/○/むず/むずる/むずれ/○",setsuzoku:"未然形",imi:"推量、意志など",yaku:"〜だろう、〜よう"},"べし":{katsuyo:"べく・べから/べく・べかり/べし/べき・べかる/べけれ/○",setsuzoku:"終止形",imi:"推量、意志、可能など",yaku:"〜だろう、〜べきだ"},"じ":{katsuyo:"○/○/じ/じ/じ/○",setsuzoku:"未然形",imi:"打消推量・意志",yaku:"〜まい"},"まじ":{katsuyo:"まじく・から/まじく・かり/まじ/まじき・かる/まじけれ/○",setsuzoku:"終止形",imi:"打消推量・意志など",yaku:"〜まい、〜べきでない"},"らむ":{katsuyo:"○/○/らむ/らむ/らめ/○",setsuzoku:"終止形",imi:"現在推量など",yaku:"今ごろ〜ているだろう"},"けむ":{katsuyo:"○/○/けむ/けむ/けめ/○",setsuzoku:"連用形",imi:"過去推量など",yaku:"〜ただろう"},"らし":{katsuyo:"○/○/らし/らし・き/らし/○",setsuzoku:"終止形",imi:"推定",yaku:"〜らしい"},"めり":{katsuyo:"○/めり/めり/める/めれ/○",setsuzoku:"終止形",imi:"推定、婉曲",yaku:"〜ようだ"},"なり（伝聞）":{katsuyo:"○/なり/なり/なる/なれ/○",setsuzoku:"終止形",imi:"伝聞、推定",yaku:"〜そうだ、〜ようだ"},"まし":{katsuyo:"ましか・ませ/○/まし/まし/ましか/○",setsuzoku:"未然形",imi:"反実仮想など",yaku:"もし〜なら…だろうに"},"る":{katsuyo:"れ/れ/る/るる/るれ/れよ",setsuzoku:"四・ナ・ラ未",imi:"自発、可能、受身、尊敬",yaku:"自然と〜れる、等"},"らる":{katsuyo:"られ/られ/らる/らるる/らるれ/られよ",setsuzoku:"四・ナ・ラ以外の未",imi:"自発、可能、受身、尊敬",yaku:"自然と〜れる、等"},"す":{katsuyo:"せ/せ/す/する/すれ/せよ",setsuzoku:"四・ナ・ラ未",imi:"使役、尊敬",yaku:"〜させる、お〜になる"},"さす":{katsuyo:"させ/させ/さす/さする/さすれ/させよ",setsuzoku:"四・ナ・ラ以外の未",imi:"使役、尊敬",yaku:"〜させる、お〜になる"},"しむ":{katsuyo:"しめ/しめ/しむ/しむる/しむれ/しめよ",setsuzoku:"未然形",imi:"使役、尊敬",yaku:"〜させる、お〜になる"},"まほし":{katsuyo:"まほしく・から/まほしく・かり/まほし/まほしき・かる/まほしけれ/○",setsuzoku:"未然形",imi:"願望",yaku:"〜たい"},"たし":{katsuyo:"たく・たから/たく・たかり/たし/たき・たかる/たけれ/○",setsuzoku:"連用形",imi:"願望",yaku:"〜たい"},"ごとし":{katsuyo:"ごとく/ごとく/ごとし/ごとき/○/○",setsuzoku:"連体・助詞・体言",imi:"比況、例示",yaku:"〜のようだ"},"ごとくなり":{katsuyo:"ごとくなら/ごとくなり・に/ごとくなり/ごとくなる/ごとくなれ/ごとくなれ",setsuzoku:"連体・助詞・体言",imi:"比況、例示",yaku:"〜のようだ"}};
+
+var stages=[
+  {name:"天智天皇",img:sampleImgs[0],needsExtraZoom:true,poem:"秋の田の かりほの庵の 苫をあらみ<br>わが衣手は 露にぬれつつ",trans:"秋の田のほとりにある仮小屋の屋根をふく草の編み目が粗いので、私の袖は夜露に濡れ続けていることだ。",bio:"第38代天皇。中大兄皇子として大化の改新を行い、のちに即位した。日本の律令国家の基礎を築いた。"},
+  {name:"柿本人麻呂",img:sampleImgs[1],needsExtraZoom:false,poem:"あしびきの 山鳥の尾の しだり尾の<br>ながながし夜を ひとりかも寝む",trans:"山鳥の長く垂れ下がった尾のように、長く長く退屈な秋の夜を、私は一人さびしく寝るのだろうか。",bio:"飛鳥時代の代表的歌人。「歌聖」と呼ばれ、『万葉集』を代表する宮廷歌人として天皇の事績などを詠んだ。"},
+  {name:"小野小町",img:sampleImgs[2],needsExtraZoom:false,poem:"花の色は うつりにけりな いたづらに<br>わが身世にふる ながめせしまに",trans:"桜の花の色はすっかり色あせてしまったことだ。むなしく春の長雨が降っていた間に。私の容姿もすっかり衰えてしまった、物思いにふけっている間に。",bio:"絶世の美女と伝わる平安前期の女流歌人。六歌仙の一人。情熱的な恋の歌や、老いを嘆く歌を多く残した。"},
+  {name:"在原業平",img:sampleImgs[3],needsExtraZoom:true,poem:"ちはやぶる 神代もきかず 竜田川<br>からくれなゐに 水くくるとは",trans:"さまざまな不思議なことが起こっていた神代の昔でさえも聞いたことがない。この竜田川に一面にもみじが散り浮いて、流れる水を鮮やかな紅色にくくり染めにしているなどとは。",bio:"六歌仙の一人。美男で恋多き貴公子として知られ、『伊勢物語』の主人公のモデルとされる。"},
+  {name:"菅原道真",img:sampleImgs[4],needsExtraZoom:false,poem:"このたびは 幣もとりあへず 手向山<br>紅葉の錦 神のまにまに",trans:"今回の旅は急なことで、お供えする幣（ぬさ）も用意することができませんでした。代わりにこの手向山の錦のような美しい紅葉を、神の御心のままにお納めください。",bio:"平安時代の学者・政治家。右大臣まで昇ったが、藤原氏の陰謀により太宰府に左遷された。死後は学問の神様（天神様）として祀られる。"},
+  {name:"紀貫之",img:sampleImgs[5],needsExtraZoom:true,poem:"人はいさ 心も知らず ふるさとは<br>花ぞ昔の 香ににほひける",trans:"人の心はさあどうだか、私にはわかりません。でも昔なじみのこの村では、梅の花だけが昔と変わらない良い香りを放って咲いていることですよ。",bio:"『古今和歌集』の撰者の一人で、仮名による序文（仮名序）を執筆。また、女性に仮託して『土佐日記』を書いた三十六歌仙の一人。"},
+  {name:"和泉式部",img:sampleImgs[6],freedImg:sampleImgs[6],needsExtraZoom:false,poem:"あらざらむ この世のほかの 思ひ出に<br>いまひとたびの 逢ふこともがな",trans:"私はもうすぐ死んでしまうでしょう。せめてあの世への思い出に、もう一度だけあなたにお逢いしたいものです。",bio:"情熱的な恋の歌で知られる平安中期の女流歌人。恋多き人生を送り、その才能は紫式部からも賞賛と嫉妬を受けた。多くの秀歌を残している。"},
+  {name:"紫式部",img:sampleImgs[7],needsExtraZoom:false,poem:"めぐりあひて 見しやそれとも わかぬ間に<br>雲がくれにし 夜半の月かな",trans:"せっかく久しぶりにめぐり逢えたのに、惹きとめることもできない間に、あわただしく帰ってしまわれた。まるで、雲間に隠れてしまった夜半の月のように。",bio:"世界最古の長編小説『源氏物語』の作者。藤原道長の娘・中宮彰子に女房として仕え、宮中の様子を『紫式部日記』にも記した。"},
+  {name:"清少納言",img:sampleImgs[8],needsExtraZoom:false,poem:"夜をこめて 鳥のそらねは はかるとも<br>よに逢坂の 関はゆるさじ",trans:"まだ夜深いうちに、鶏の鳴き真似をして騙そうとしても、この逢坂の関だけは決して許しませんよ。（私を騙して逢瀬を遂げようとしても、決して騙されませんよ）",bio:"『枕草子』の作者。藤原定子の女房として活躍し、漢学の深い教養と機知に富んだ受け答えで名を馳せた。"},
+  {name:"西行法師",img:sampleImgs[9],needsExtraZoom:true,poem:"なげけとて 月やはものを 思はする<br>かこち顔なる わが涙かな",trans:"嘆けと言って、月が私に物思いをさせるのだろうか。いや、そうではないのに、月のせいだとばかりにこぼれ落ちる私の涙であるよ。",bio:"平安末期から鎌倉初期の僧侶・歌人。元は北面武士だったが出家して諸国を行脚し、自然や月、桜を愛する歌を『山家集』に多く残した。"},
+  {name:"寂蓮法師",img:sampleImgs[10],needsExtraZoom:false,poem:"むらさめの 露もまだひぬ まきの葉に<br>霧たちのぼる 秋の夕ぐれ",trans:"にわか雨が通り過ぎて、真木（杉や檜など）の葉に降りかかったその露もまだ乾いていないというのに、もうそこから霧が白く立ちのぼっている秋の夕暮れであるよ。",bio:"新古今時代の代表的歌人。藤原俊成の甥。出家して諸国を行脚し、幽玄で絵画的な美しい情景を詠んだ。"},
+  {name:"藤原定家",img:sampleImgs[11],needsExtraZoom:true,poem:"来ぬ人を まつほの浦の 夕なぎに<br>焼くや藻塩の 身もこがれつつ",trans:"松帆の浦の夕なぎの時に焼く藻塩のように、いつまで待っても来ない人を待ち焦がれて、私の身も恋い焦がれていることです。",bio:"『新古今和歌集』や『百人一首』の撰者。新古今調と呼ばれる、技巧的で妖艶な美しさを追求した和歌の第一人者。"},
+  {name:"後鳥羽院",img:sampleImgs[12],needsExtraZoom:true,poem:"人もをし 人も恨めし あぢきなく<br>世を思ふゆゑに もの思ふ身は",trans:"ある時は人が愛おしく思われ、またある時は人が恨めしく思われる。つまらない世の中だと思うため、あれこれと物思いに沈む私であるよ。",bio:"第82代天皇。多芸多才で『新古今和歌集』の編纂を命じ、のちに即位した。鎌倉幕府倒幕のため承久の乱を起こしたが敗れ、隠岐島に流された。"}
+];
+
+var fullQuizDatabase=[
+  {cat:"kako",q:"過去の助動詞「き」は活用語の何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:1,v:"き",exp:"過去の助動詞「き」は原則として連用形に接続します（カ変・サ変には未然形にも接続）。"},
+  {cat:"kako",q:"助動詞「けり」は活用語の何形に接続するか。",choices:["未然形","終止形","連用形","連体形"],ans:2,v:"けり",exp:"過去・詠嘆の助動詞「けり」は活用語の連用形に接続します。"},
+  {cat:"kako",q:"過去の助動詞「き」の未然形を答えよ。",choices:["せ","し","しか","き"],ans:0,v:"き",exp:"「き」の活用は「せ／○／き／し／しか／○」となります。"},
+  {cat:"kako",q:"助動詞「き」の已然形を答えよ。",choices:["し","せ","しか","き"],ans:2,v:"き",exp:"「き」の已然形は「しか」です。"},
+  {cat:"kako",q:"「き」と「けり」のうち、直接体験したことを回想するのはどちらか。",choices:["き","けり","つ","ぬ"],ans:0,v:"き",exp:"「き」は話し手が直接体験した過去を表します。"},
+  {cat:"kako",q:"「富士の高嶺に雪は降り<span class='highlight-word'>ける</span>」の「ける」の意味は何か。",choices:["過去","詠嘆","完了","存続"],ans:1,v:"けり",exp:"『富士の高嶺に雪が降り積もっていることよ。』和歌の末尾などで感動を表す「けり」は「詠嘆（〜だったのだなあ）」を表します。"},
+  {cat:"kako",q:"「けり」の詠嘆の用法は、どのような文で使われることが多いか。",choices:["漢文訓読体","物語の地の文","和歌や会話文","軍記物語"],ans:2,v:"けり",exp:"詠嘆の「けり」は和歌や会話文中でよく用いられます。"},
+  {cat:"kako",q:"助動詞「き」がサ変動詞の未然形「せ」に接続する場合、何という形になるか。",choices:["せけり","せし（せしか）","せき","しき"],ans:1,v:"き",exp:"サ変＋「き」は未然形「せ」に接続して「せし」「せしか」の形をとります。"},
+  {cat:"kako",q:"「今は昔、竹取の翁といふものありけり。」の現代語訳を答えよ。",choices:["昔、竹取の翁という者がいた。","今は昔だが、翁がいた。","昔、竹取の翁がいたことだなあ。","竹取の翁という者がいるそうだ。"],ans:0,v:"けり",exp:"「ありけり」は伝聞過去（〜がいたそうだ／〜がいた）と訳します。"},
+  {cat:"kako",q:"「京より下りしときに、みな人、子どもなかりき。」の現代語訳を答えよ。",choices:["京から下ったとき、誰もいなかった。","京から下ったとき、みな子供がなかった。","京から下ったとき、子供が泣いていた。","京から下ったとき、子供がいなくなった。"],ans:1,v:"き",exp:"「なかりき」は「無かり＋き」で「〜が無かった」という意味になります。"},
+  {cat:"kako",q:"「この殿たちの御仲いと悪しかり<span class='highlight-word'>き</span>。」の「き」の意味は何か。",choices:["過去","完了","存続","詠嘆"],ans:0,v:"き",exp:"『この殿たちの仲はたいそう悪かった。』「き」は自分の直接体験した過去を表す助動詞です。"},
+  {cat:"kako",q:"「我見<span class='highlight-word'>し</span>人もなき世なり。」の「し」の意味は何か。",choices:["過去","断定","打消","意志"],ans:0,v:"き",exp:"『私が知っていた人もいない世の中である。』「し」は助動詞「き」の連体形です。"},
+  {cat:"kako",q:"「雨のいたく降り<span class='highlight-word'>しか</span>ば、え参らず。」の「しか」の意味は何か。",choices:["過去","完了","推量","条件"],ans:0,v:"き",exp:"『雨がひどく降ったので、参上することができなかった。』「しか」は助動詞「き」の已然形です。"},
+  {cat:"kako",q:"「むかし、男あり<span class='highlight-word'>けり</span>。」の「けり」の意味は何か。",choices:["過去","詠嘆","伝聞","推量"],ans:0,v:"けり",exp:"『昔、男がいたそうだ。』「けり」は他者から聞いた過去（〜たそうだ）を表します。"},
+  {cat:"kako",q:"「花の色は うつりに<span class='highlight-word'>けり</span>な」の「けり」の意味は何か。",choices:["詠嘆","過去","断定","完了"],ans:0,v:"けり",exp:"『花の色は色あせてしまったのだなあ。』和歌や会話文中の「けり」は気づきの「詠嘆（〜だったのだなあ）」を表します。"},
+  {cat:"kako",q:"「大門、金堂など近くまであり<span class='highlight-word'>しか</span>ど」の「しか」の意味は何か。",choices:["過去","完了","強意","詠嘆"],ans:0,v:"き",exp:"『大門や金堂などは、最近まであったが、』「ありしかど」の「しか」は過去の助動詞「き」の已然形です。"},
+  {cat:"kako",q:"「ある時には、来<span class='highlight-word'>し</span>方行く末も知らず」の「し」の意味は何か。",choices:["過去","打消","受身","推量"],ans:0,v:"き",exp:"『来た方角も進む先もわからなくなり、』カ変「来」の未然形に接続した過去の助動詞「き」の連体形「し」です。"},
+  {cat:"kako",q:"「わがせ<span class='highlight-word'>し</span>がごとうるはしみせよ」の「し」の意味は何か。",choices:["過去","完了","存続","断定"],ans:0,v:"き",exp:"『私がおまえを愛したように、おまえも相手を愛して仲良く暮らしなさいよ。』サ変「す」の未然形「せ」に過去の助動詞「き」の連体形「し」が接続した形です。"},
+  {cat:"kako",q:"「祭り見<span class='highlight-word'>し</span>さま、いとめづらかなりき。」の「し」の意味は何か。",choices:["過去","完了","打消","尊敬"],ans:0,v:"き",exp:"『（賀茂祭りを）見物した様子は、たいそう珍妙であった。』動詞の連用形「見」に接続する「し」は過去の助動詞「き」の連体形です。"},
+  {cat:"kako",q:"「思ふさまに吹き<span class='highlight-word'>ける</span>、世にたぐひなく」の「ける」の意味は何か。",choices:["過去","詠嘆","推量","完了"],ans:0,v:"けり",exp:"『思う存分に吹いた（笛の音色は）、世に並ぶものがなく』地の文で過去の動作・状態を表す「けり」の連体形「ける」です。"},
+  {cat:"kako",q:"「聞きしにも過ぎて、尊くこそおはし<span class='highlight-word'>けれ</span>。」の「けれ」の意味は何か。",choices:["詠嘆","過去","完了","断定"],ans:0,v:"けり",exp:"『聞いていた以上に、まことに尊くていらっしゃったことよ。』「こそ〜けれ」の係り結びで詠嘆を表します。"},
+  {cat:"kako",q:"「『さは、翁丸にこそはあり<span class='highlight-word'>けれ</span>。』」の「けれ」の意味は何か。",choices:["詠嘆","過去","存続","推定"],ans:0,v:"けり",exp:"『「それでは、やはり翁丸であったのだなあ。」』会話文中の気づきを表す「けり」で、詠嘆の意味（〜であったのだなあ）になります。"},
+  {cat:"kako",q:"「盗人の襲ひかかりたるなり<span class='highlight-word'>けり</span>。」の「けり」の意味は何か。",choices:["詠嘆","過去","完了","伝聞"],ans:0,v:"けり",exp:"『「泥棒が襲いかかってきたのだったのだなあ。」』事実に気づいた驚きを表す「詠嘆」の用法です。"},
+  {cat:"kako",q:"「見渡せば花も紅葉もなかり<span class='highlight-word'>けり</span>」の「けり」の意味は何か。",choices:["詠嘆","過去","打消","推定"],ans:0,v:"けり",exp:"『見渡すと、華やかな桜も紅葉も無かったのだなあ。』和歌の結びで詠嘆（〜なかったのだなあ）を表します。"},
+  {cat:"kako",q:"「わがうへを思ふなり<span class='highlight-word'>けり</span>と思ふに」の「けり」の意味は何か。",choices:["詠嘆","過去","断定","完了"],ans:0,v:"けり",exp:"『私の身の上を案じていたのだったのだなあと思うと』「なりけり」の形で、心に深く感じた気づき・詠嘆を表します。"},
+  {cat:"kako",q:"「駿河なる宇津の山べのうつつにも夢にも人にあはぬなり<span class='highlight-word'>けり</span>」の「けり」の意味は何か。",choices:["詠嘆","過去","推量","存続"],ans:0,v:"けり",exp:"『現実にも夢の中であなたに逢わないことであるよ。』和歌中の「なりけり」で、詠嘆の意味を表します。"},
+  {cat:"kako",q:"過去の助動詞「き」の連体形を答えよ。",choices:["し","せ","き","しか"],ans:0,v:"き",exp:"「き」の活用は「せ／○／き／し／しか／○」なので連体形は「し」です。"},
+  {cat:"kako",q:"「けり」の活用型は何型か。",choices:["ラ変型","四段型","サ変型","形容詞型"],ans:0,v:"けり",exp:"「けり」は「（けら）／○／けり／ける／けれ／○」とラ変型の活用をします。"},
+  {cat:"kako",q:"「くらべこ<span class='highlight-word'>し</span>振り分け髪も肩過ぎぬ」の「し」の意味は何か。",choices:["過去","完了","打消","存続"],ans:0,v:"き",exp:"『貴方と長さを比べてきた私の振り分け髪も肩より長くなりました。』カ変動詞「来（く）」の連用形「こ」に接続した過去の助動詞「き」の連体形「し」です。"},
+  {cat:"kako",q:"「き」の未然形「せ」は主にどのような形で使われるか。",choices:["「〜せば…まし」","「〜せし」","「〜せしかば」","「〜せき」"],ans:0,v:"き",exp:"「せば…まし」の形で反実仮想を表す場合に用いられます。"},
+  {cat:"kanryo",q:"「つ」「ぬ」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:1,v:"つ",exp:"完了の助動詞「つ」「ぬ」はともに連用形に接続します。"},
+  {cat:"kanryo",q:"完了の助動詞「ぬ」の終止形を答えよ。",choices:["な","に","ぬ","ぬる"],ans:2,v:"ぬ",exp:"「ぬ」の活用は「な／に／ぬ／ぬる／ぬれ／ね」です。"},
+  {cat:"kanryo",q:"「つ」の命令形を答えよ。",choices:["て","つ","てよ","つれ"],ans:2,v:"つ",exp:"「つ」の活用は「て／て／つ／つる／つれ／てよ」となります。"},
+  {cat:"kanryo",q:"意識的・意図的な動作・作用の完了を表すのは「つ」「ぬ」のどちらか。",choices:["つ","ぬ","たり","り"],ans:0,v:"つ",exp:"「つ」は意図的な動作、「ぬ」は自然推移の動作によく使われます。"},
+  {cat:"kanryo",q:"「つ」「ぬ」の下に過去の助動詞が付く場合、どのような意味になることが多いか。",choices:["強意","並列","完了","推量"],ans:2,v:"つ",exp:"「てき」「にけり」などの形は「完了（〜てしまった）」の意味になります。"},
+  {cat:"kanryo",q:"「必ず行き<span class='highlight-word'>つ</span>べし。」の「つ」の意味は何か。",choices:["確述（強意）","完了","並列","過去"],ans:0,v:"つ",exp:"『必ずきっと行くだろう。』推量語「べし」の上にある「つ」は「確述（強意）」（きっと〜）を表します。"},
+  {cat:"kanryo",q:"「し<span class='highlight-word'>つ</span>べき人もまじれれど」の「つ」の意味は何か。",choices:["完了","並列","確述（強意）","過去"],ans:2,v:"つ",exp:"『（返歌を）することが確かにできるはずの人もまじってはいるけれども、』推量「べし」に連なる「つ」は確述（強意）の意味になります。"},
+  {cat:"kanryo",q:"「浮き<span class='highlight-word'>ぬ</span>沈み<span class='highlight-word'>ぬ</span>」の「ぬ」の意味は何か。",choices:["打消","完了","強意","並列"],ans:3,v:"ぬ",exp:"『浮いたり沈んだりしてゆらゆら揺られていたので、』「〜ぬ〜ぬ」と繰り返す形は「並列（〜たり〜たり）」を表します。"},
+  {cat:"kanryo",q:"完了の助動詞「つ」の連体形はどれか。",choices:["て","つ","つる","つれ"],ans:2,v:"つ",exp:"「つ」の連体形は「つる」です。"},
+  {cat:"kanryo",q:"「雨やみぬ。」の現代語訳を答えよ。",choices:["雨がやまない。","雨がやんだ。","雨がやむだろう。","雨がやんでしまったことだなあ。"],ans:1,v:"ぬ",exp:"「やみぬ」は「やんだ・やんでしまった」と完了で訳します。"},
+  {cat:"kanryo",q:"「日を暮らし<span class='highlight-word'>つ</span>」の「つ」の意味は何か。",choices:["完了","過去","意志","存続"],ans:0,v:"つ",exp:"「つ」は意図的な動作の「完了（〜てしまった）」を表します。『日を過してしまった』"},
+  {cat:"kanryo",q:"「秋は来<span class='highlight-word'>に</span>けり」の「に」の意味は何か。",choices:["完了","断定","格助詞","過去"],ans:0,v:"ぬ",exp:"「に」は完了の助動詞「ぬ」の連用形です。『秋は来てしまったことだなあ。』"},
+  {cat:"kanryo",q:"「風立ち<span class='highlight-word'>ぬ</span>。」の「ぬ」の意味は何か。",choices:["完了","打消","過去","推量"],ans:0,v:"ぬ",exp:"「ぬ」は自然発生的な動作の「完了（〜てしまった）」を表します。『風が吹いてしまった。』"},
+  {cat:"kanryo",q:"「見送りに来<span class='highlight-word'>つる</span>人々、これより皆帰りぬ。」の「つる」の意味は何か。",choices:["完了","強意","存続","過去"],ans:0,v:"つ",exp:"連用形に接続する「つる」は完了の意味を表します。『見送るために来た人々は、ここから皆帰ってしまった。』"},
+  {cat:"kanryo",q:"「髪もいみじく長くなり<span class='highlight-word'>な</span>む。」の「な」の意味は何か。",choices:["確述（強意）","完了","打消","願望"],ans:0,v:"ぬ",exp:"推量「む」の上にある「な」は強意の助動詞「ぬ」の未然形です。『（年頃になったら）髪もきっとたいそう長くなるだろう。』"},
+  {cat:"kanryo",q:"「閉ぢ<span class='highlight-word'>つ</span>開き<span class='highlight-word'>つ</span>入ることを得ず。」の「つ」の意味は何か。",choices:["並列","完了","強意","意志"],ans:0,v:"つ",exp:"「〜つ〜つ」と繰り返して動作の並列（〜たり〜たり）を表します。『閉じたり開いたりして、入ることができない。』"},
+  {cat:"kanryo",q:"「はや殺し給ひ<span class='highlight-word'>てよ</span>かし。」の「てよ」の意味は何か。",choices:["確述（強意）","完了","接続助詞","過去"],ans:0,v:"つ",exp:"命令表現を強める確述（強意）の助動詞「つ」の命令形「てよ」です。『早く殺してしまいなさいな。』"},
+  {cat:"kanryo",q:"「とまれかうまれ、とく破り<span class='highlight-word'>て</span>む。」の「て」の意味は何か。",choices:["確述（強意）","完了","打消","接続助詞"],ans:0,v:"つ",exp:"意志の「む」の上にある「て」は強意の助動詞「つ」の未然形です。『何はともあれ、早く破ってしまおう。』"},
+  {cat:"kanryo",q:"「はや舟に乗れ。日も暮れ<span class='highlight-word'>ぬ</span>。」の「ぬ」の意味は何か。",choices:["確述（完了）","打消","並列","過去"],ans:0,v:"ぬ",exp:"動作・事態の完了・確述（〜てしまう）を表します。『早く舟に乗れ。日も暮れてしまう。』"},
+  {cat:"kanryo",q:"「とく帰り給ひ<span class='highlight-word'>ね</span>。」の「ね」の意味は何か。",choices:["確述（強意）","打消","完了","過去"],ans:0,v:"ぬ",exp:"命令の意を強める確述（強意）の助動詞「ぬ」の命令形「ね」です。『早くおえ帰りになってしまいなさい。』"},
+  {cat:"kanryo",q:"「組んづ組まれつ、討ち<span class='highlight-word'>つ</span>討たれつ。」の「つ」の意味は何か。",choices:["並列","完了","強意","過去"],ans:0,v:"つ",exp:"『組んだり組まれたり、討ったり討たれたり。』交互に行われる動作の「並列」を表します。"},
+  {cat:"kanryo",q:"「泣き<span class='highlight-word'>ぬ</span>笑ひ<span class='highlight-word'>ぬ</span>ぞし給ひける。」の「ぬ」の意味は何か。",choices:["並列","打消","完了","強意"],ans:0,v:"ぬ",exp:"繰り返す動作の「並列」を表します。『泣いたり笑ったりなさいました。』"},
+  {cat:"kanryo",q:"「なよ竹のかぐや姫とつけ<span class='highlight-word'>つ</span>。」の「つ」の意味は何か。",choices:["完了","存続","並列","過去"],ans:0,v:"つ",exp:"意図的な動作の「完了」を表します。『なよ竹のかぐや姫と（名を）つけた。』"},
+  {cat:"kanryo",q:"「苦しきこともやみ<span class='highlight-word'>ぬ</span>。」の「ぬ」の意味は何か。",choices:["完了","打消","強意","並列"],ans:0,v:"ぬ",exp:"自然な変化の「完了」を表します。『（この子を見ると）苦しい気持ちも治まった。』"},
+  {cat:"kanryo",q:"「一夜のうちに塵灰となり<span class='highlight-word'>に</span>き。」の「に」の意味は何か。",choices:["完了","断定","格助詞","存在"],ans:0,v:"ぬ",exp:"過去の助動詞「き」の上にある「に」は完了の助動詞「ぬ」の連用形です。『一夜のうちに廃灰となってしまった。』"},
+  {cat:"kanryo",q:"「かしらおろし<span class='highlight-word'>て</span>けり。」の「て」の意味は何か。",choices:["完了","接続助詞","強意","過去"],ans:0,v:"つ",exp:"過去の「けり」の上にある「て」は完了の助動詞「つ」の連用形です。『出家してしまった。』"},
+  {cat:"kanryo",q:"完了・存続の「たり」は何形に接続するか。",choices:["未然形","連用形","終止形","体言"],ans:1,v:"たり（完了）",exp:"完了・存続の「たり」は連用形に接続します。"},
+  {cat:"kanryo",q:"「り」が四段動詞に接続する場合、何形に接続するとされるか。",choices:["未然形","連用形","已然形","終止形"],ans:2,v:"り",exp:"「り」は四段の已然形（または命令形）、サ変の未然形（リカちゃんサミシイ）に接続します。"},
+  {cat:"kanryo",q:"「り」がサ変動詞に接続する場合、何形に接続するか。",choices:["未然形","連用形","終止形","命令形"],ans:0,v:"り",exp:"サ変動詞には未然形（「せ」）、四段動詞には已然形に接続します。"},
+  {cat:"kanryo",q:"「たり」の終止形を答えよ。",choices:["たら","たり","たる","たれ"],ans:1,v:"たり（完了）",exp:"「たり」の活用は「たら／たり／たり／たる／たれ／たれ」です。"},
+  {cat:"kanryo",q:"「り」の已然形を答えよ。",choices:["ら","り","る","れ"],ans:3,v:"り",exp:"「り」の活用は「ら／り／り／る／れ／れ」です。"},
+  {cat:"kanryo",q:"完了と存続のうち、事件が済んでその結果が今も存在し続けていることを表すのは？",choices:["完了","存続","強意","断定"],ans:1,v:"たり（完了）",exp:"動作の結果が残っている状態を「存続（〜ている）」といいます。"},
+  {cat:"kanryo",q:"「紫だち<span class='highlight-word'>たる</span>雲の」の「たる」の意味は何か。",choices:["完了","存続","並列","断定"],ans:1,v:"たり（完了）",exp:"状態の存続を表します。『紫がかっている雲が細くたなびいている（のは良い）。』"},
+  {cat:"kanryo",q:"「古人も多く旅に死せ<span class='highlight-word'>る</span>あり」の「る」の意味は何か。",choices:["存続","完了","過去","受身"],ans:1,v:"り",exp:"完了を表します。『昔の人たち（の中に）も多く旅の途中で死んでしまった人がいる。』"},
+  {cat:"kanryo",q:"「たり」「り」の基本的意味は何か。",choices:["完了","存続","過去","断定"],ans:1,v:"たり（完了）",exp:"完了でも存続でも訳せる場合は、存続で訳す。"},
+  {cat:"kanryo",q:"「かきつばたいとおもしろく咲きたり。」の現代語訳を答えよ。",choices:["かきつばたが美しく咲いた。","かきつばたが美しく咲いている。","かきつばたが美しく咲くそうだ。","かきつばたが美しく咲いたことよ。"],ans:1,v:"たり（完了）",exp:"「咲きたり」は「咲いている」と存続で訳します。"},
+  {cat:"kanryo",q:"「梅の花 咲き<span class='highlight-word'>たる</span>園」の「たる」の意味は何か。",choices:["存続","断定","過去","推定"],ans:0,v:"たり（完了）",exp:"「たり」は動作の完了や結果の「存続（〜ている）」を表します。『梅の花が咲いているこの庭園』"},
+  {cat:"kanryo",q:"「草木生ひ茂れ<span class='highlight-word'>り</span>。」の「り」の意味は何か。",choices:["存続・完了","断定","過去","伝聞"],ans:0,v:"り",exp:"サ変未然形・四段已然形に接続する「り」は存続・完了を表します。『草木が生い茂っている。』"},
+  {cat:"kanryo",q:"「かくなつてこそ参り<span class='highlight-word'>たれ</span>。」の「たれ」の意味は何か。",choices:["完了","存続","断定","過去"],ans:0,v:"たり（完了）",exp:"完了を表します。『このよう（な尼姿）になって参上いたしました。』"},
+  {cat:"kanryo",q:"「五月のつごもりに雪いと白う降れ<span class='highlight-word'>り</span>。」の「り」の意味は何か。",choices:["存続","完了","過去","推定"],ans:0,v:"り",exp:"四段動詞「降る」の已然形に接続する存続の「り」です。『旧暦五月の末頃だというのに、雪がたいそう白く降り積もっている。』"},
+  {cat:"kanryo",q:"「あしと思へ<span class='highlight-word'>る</span>けしきもなくて」の「る」の意味は何か。",choices:["存続","完了","受身","自発"],ans:0,v:"り",exp:"四段動詞「思ふ」の已然形「思へ」に接続する存続の「り」の連体形です。『いやだと思っている様子もなくて』"},
+  {cat:"kanryo",q:"「すでにし出だしたるさまにて、ひしめき合ひ<span class='highlight-word'>たり</span>。」の「たり」の意味は何か。",choices:["存続（完了）","断定","過去","推量"],ans:0,v:"たり（完了）",exp:"動作・状態の「存続（〜している）」を表します。『早くも（ぼたもちを）作り上げた様子で、騒ぎ合っている。』"},
+  {cat:"kanryo",q:"「大和人、『来む。』と言へ<span class='highlight-word'>り</span>。」の「り」の意味は何か。",choices:["完了","存続","過去","伝聞"],ans:0,v:"り",exp:"四段動詞「言ふ」の已然形「言へ」に接続する「完了（言った）」の「り」です。『大和の人は、「行くつもりだ。」と言った。』"},
+  {cat:"kanryo",q:"「歌をなむよみて出だし<span class='highlight-word'>たり</span>ける。」の「たり」の意味は何か。",choices:["完了","存続","断定","強意"],ans:0,v:"たり（完了）",exp:"動作の「完了（〜てしまった）」を表します。『和歌を詠んで（男に）差し出してしまった。』"},
+  {cat:"kanryo",q:"「荒れ<span class='highlight-word'>たる</span>庭の露しげきに」の「たる」の意味は何か。",choices:["存続","完了","断定","過去"],ans:0,v:"たり（完了）",exp:"「荒れている」という状態の存続を表します。『荒れている庭で露が一面に降りている所に』"},
+  {cat:"kanryo",q:"「おごれ<span class='highlight-word'>る</span>人も久しからず」の「る」の意味は何か。",choices:["存続","完了","尊敬","受身"],ans:0,v:"り",exp:"四段動詞「おごる」の已然形に接続する存続の「り」です。『おごりたかぶっている人もそのおごりの日々は長くは続かない』"},
+  {cat:"kanryo",q:"「掃い<span class='highlight-word'>たり</span>拭う<span class='highlight-word'>たり</span>」の「たり」の意味は何か。",choices:["並列","完了","存続","断定"],ans:0,v:"たり（完了）",exp:"中世以降に生じた「並列（〜たり〜たり）」の用法です。『掃いたり拭いたり』"},
+  {cat:"kanryo",q:"「り」の活用型は何型か。",choices:["ラ変型","四段型","サ変型","形容詞型"],ans:0,v:"り",exp:"「ら／り／り／る／れ／れ」とラ変型活用をします。"},
+  {cat:"kanryo",q:"完了の「たり」の活用型は何型か。",choices:["ラ変型","四段型","ナリ活用型","形容詞型"],ans:0,v:"たり（完了）",exp:"「たら／たり／たり／たる／たれ／たれ」とラ変型活用をします。"},
+  {cat:"kanryo",q:"「り」が接続する語の暗記語として有名なフレーズはどれか。",choices:["リカちゃんサミシイ（サ未・四已）","スイカ（サ已・四未）","カササギ","ラ変連体"],ans:0,v:"り",exp:"サ変の未然形（「せ」）と四段の已然形（「〜え」）に接続します。"},
+  {cat:"dantei",q:"断定の「なり」は体言と何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:3,v:"なり（断定）",exp:"断定の「なり」は体言および活用語の連体形に接続します。"},
+  {cat:"dantei",q:"断定の「たり」の接続は何か。",choices:["体言","連体形","連用形","終止形"],ans:0,v:"たり（断定）",exp:"断定の「たり」は体言に接続します。"},
+  {cat:"dantei",q:"断定の「なり」の連用形を2つ答えよ。",choices:["なら・なり","なり・に","なり・なる","に・なる"],ans:1,v:"なり（断定）",exp:"「なり」の連用形には「なり」と「に」の2形があります。"},
+  {cat:"dantei",q:"断定の「たり」の已然形を答えよ。",choices:["たら","たり","たる","たれ"],ans:3,v:"たり（断定）",exp:"「たり」の已然形は「たれ」です。"},
+  {cat:"dantei",q:"「よき方の風<span class='highlight-word'>なり</span>。」の「なり」の意味は何か。",choices:["伝聞","推定","断定","存在"],ans:2,v:"なり（断定）",exp:"体言「風」に接続する「なり」は「断定（〜である）」です。『都合の良い方角に吹く風である。』"},
+  {cat:"dantei",q:"断定の助動詞「なり」のもう一つの意味（断定以外）は何か。",choices:["伝聞","推定","存在（所在）","詠嘆"],ans:2,v:"なり（断定）",exp:"「〜にある・〜にいる」という意味の「存在（所在）」があります。"},
+  {cat:"dantei",q:"断定の「なり」が連用形「に」となる場合、「にあり」のように何という動詞が付くか。",choices:["補助動詞","本動詞","自動詞","他動詞"],ans:0,v:"なり（断定）",exp:"「にあり」「に侍り」のようにラ変系動詞が下に伴います。"},
+  {cat:"dantei",q:"「君、君<span class='highlight-word'>たら</span>ずといふとも」の「たら」の意味は何か。",choices:["完了","存続","断定","打消"],ans:2,v:"たり（断定）",exp:"体言「君」に続く「たら」は断定の助動詞「たり」の未然形です。『君主が君主らしくないといっても、』"},
+  {cat:"dantei",q:"断定の助動詞「なり」は何活用型か。",choices:["形容詞型","形容動詞型（ナリ活用）","四段型","ラ変型"],ans:1,v:"なり（断定）",exp:"「なら／なり・に／なり／なる／なれ／なれ」とナリ活用（形容動詞型）をします。"},
+  {cat:"dantei",q:"「御前<span class='highlight-word'>なる</span>獅子・狛犬、背きて」の「なる」の意味は何か。",choices:["存在","断定","伝聞","推定"],ans:0,v:"なり（断定）",exp:"場所を表す語「御前」に伴う「なる」は「存在（〜にある・〜にいる）」を表します。『社殿の前にある獅子と狛犬が背を向け合って』"},
+  {cat:"dantei",q:"「男もすなる日記といふものを、女もしてみむとてする<span class='highlight-word'>なり</span>」の「なり」の意味は何か。",choices:["断定","伝聞","推定","和歌"],ans:0,v:"なり（断定）",exp:"体言や連体形に接続する「なり」は「断定」を表します。『男性も書くという日記というものを、女性である私も書いてみようと思って書くのだ。』"},
+  {cat:"dantei",q:"「一人は鬼<span class='highlight-word'>たり</span>」の「たり」の意味は何か。",choices:["断定","完了","存続","過去"],ans:0,v:"たり（断定）",exp:"体言に接続する「たり」は「断定（〜である）」を表します。『一人は鬼である』"},
+  {cat:"dantei",q:"「春日<span class='highlight-word'>なる</span>三笠の山に出でし月かも」の「なる」の意味は何か。",choices:["存在","断定","伝聞","推定"],ans:0,v:"なり（断定）",exp:"地名「春日」に接続する「なる」は「存在（〜にある）」を表します。『春日にある三笠山の山の端に出ていた月であることよ。』"},
+  {cat:"dantei",q:"「あしき方の風<span class='highlight-word'>に</span>はあらず。」の「に」の意味は何か。",choices:["断定","格助詞","完了","接続助詞"],ans:0,v:"なり（断定）",exp:"「に＋あらず」の「に」は断定の助動詞「なり」の連用形です。『悪い方角に吹く風ではない。』"},
+  {cat:"dantei",q:"「諸国の受領<span class='highlight-word'>たり</span>しかども」の「たり」の意味は何か。",choices:["断定","完了","存続","並列"],ans:0,v:"たり（断定）",exp:"体言「受領」に接続する「たり」は断定の助動詞です。『諸国の受領であったが、』"},
+  {cat:"dantei",q:"「見し人<span class='highlight-word'>なり</span>けり。」の「なり」の意味は何か。",choices:["断定","伝聞","推定","存在"],ans:0,v:"なり（断定）",exp:"体言「人」に接続する「なり」は断定（〜であった）を表します。『見知った人であったよ。』"},
+  {cat:"dantei",q:"「七珍万宝一つ<span class='highlight-word'>と</span>して欠けたることなし。」の「と」の意味は何か。",choices:["断定","格助詞","接続助詞","引用"],ans:0,v:"たり（断定）",exp:"断定の助動詞「たり」の連用形「と」です。『珍しい数々の財宝は一つとして欠けていることがない。』"},
+  {cat:"dantei",q:"「日々旅<span class='highlight-word'>に</span>して、旅を栖とす。」の「に」の意味は何か。",choices:["断定","格助詞","完了","存在"],ans:0,v:"なり（断定）",exp:"「にして」の「に」は断定の助動詞「なり」の連用形です。『毎日が旅であって、旅を自分の住む家としている。』"},
+  {cat:"dantei",q:"「罪得べきこと<span class='highlight-word'>に</span>あらず。」の「に」の意味は何か。",choices:["断定","格助詞","存在","完了"],ans:0,v:"なり（断定）",exp:"打消「あらず」の上にある「に」は断定の助動詞「なり」の連用形です。『罪を得るはずのことではない。』"},
+  {cat:"dantei",q:"「異心ありてかかる<span class='highlight-word'>に</span>やあらむ。」の「に」の意味は何か。",choices:["断定","格助詞","完了","副助詞"],ans:0,v:"なり（断定）",exp:"「に＋や＋あらむ」の「に」は断定の助動詞「なり」の連用形です。『浮気心があってこのようであるのだろうか。』"},
+  {cat:"dantei",q:"「いかなる仏<span class='highlight-word'>に</span>か候ひける。」の「に」の意味は何か。",choices:["断定","格助詞","完了","存在"],ans:0,v:"なり（断定）",exp:"「に＋か＋候ひける」の「に」は断定の助動詞「なり」の連用形です。『どのような仏でございましたのでしょうか。』"},
+  {cat:"dantei",q:"「人の心も、荒れたる<span class='highlight-word'>なり</span>けり。」の「なり」の意味は何か。",choices:["断定","伝聞","推定","存在"],ans:0,v:"なり（断定）",exp:"活用語の連体形「荒れたる」に接続する「なり」は「断定」です。『人の心も、すさんでいるのであったよ。』"},
+  {cat:"dantei",q:"「清盛、嫡男<span class='highlight-word'>たる</span>によつて」の「たる」の意味は何か。",choices:["断定","完了","存続","過去"],ans:0,v:"たり（断定）",exp:"体言「嫡男」に接続する「たる」は断定の助動詞「たり」の連体形です。『清盛は、嫡男であることによって』"},
+  {cat:"dantei",q:"断定の「たり」は何活用型か。",choices:["タリ活用型（形容動詞型）","ナリ活用型","ラ変型","四段型"],ans:0,v:"たり（断定）",exp:"「たら／たり・と／たり／たる／たれ／たれ」とタリ活用（形容動詞型）をします。"},
+  {cat:"uchikeshi",q:"打消の「ず」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"ず",exp:"打消の助動詞「ず」は活用語の未然形に接続します。"},
+  {cat:"uchikeshi",q:"打消の「ず」の連体形を答えよ。",choices:["ざら","ざり","ぬ（ざる）","ね（ざれ）"],ans:2,v:"ず",exp:"「ず」の本活用の連体形は「ぬ」、補助活用の連体形は「ざる」です。"},
+  {cat:"uchikeshi",q:"打消の「ず」の已然形を答えよ。",choices:["ざら","ざり","ぬ（ざる）","ね（ざれ）"],ans:3,v:"ず",exp:"「ず」の已然形は本活用が「ね」、補助活用が「ざれ」です。"},
+  {cat:"uchikeshi",q:"「京には見え<span class='highlight-word'>ぬ</span>鳥なれば」の「ぬ」の意味は何か。",choices:["完了","強意","打消","並列"],ans:2,v:"ず",exp:"未然形「見え」に接続する「ぬ」は打消「ず」の連体形です。『京では見かけない鳥なので』"},
+  {cat:"uchikeshi",q:"「ず」がラ変型活用をする「ざり」の系列は、「ず」に何が付いてできたものか。",choices:["あり","をり","はべり","いまそかり"],ans:0,v:"ず",exp:"「ず＋あり」が変化して「ざり」となりました。"},
+  {cat:"uchikeshi",q:"「ず」の未然形「な」は、どのような形で和歌に用いられるか。",choices:["なむ","なくに","などて","なれや"],ans:1,v:"ず",exp:"「〜なくに（〜ないのになあ）」などの形で用いられます。"},
+  {cat:"uchikeshi",q:"「みな人見知らず。」の現代語訳を答えよ。",choices:["誰も見ようとしない。","誰も（その鳥を）見知らない。","誰も見知った人がいない。","皆が人見知りだ。"],ans:1,v:"ず",exp:"「見知らず」は「見知っていない・知らない」の意味です。"},
+  {cat:"uchikeshi",q:"「鳴か<span class='highlight-word'>ず</span>」の「ず」の意味は何か。",choices:["打消","完了","過去","意志"],ans:0,v:"ず",exp:"未然形に接続する「ず」は「打消（〜ない）」を表します。『鳴かない』"},
+  {cat:"uchikeshi",q:"「行か<span class='highlight-word'>ぬ</span>人」の「ぬ」の意味は何か。",choices:["打消","完了","過去","断定"],ans:0,v:"ず",exp:"未然形に接続する「ぬ」は打消の助動詞「ず」の連体形です。『行かない人』"},
+  {cat:"uchikeshi",q:"「淵瀬さらに変はら<span class='highlight-word'>ざり</span>けり。」の「ざり」の意味は何か。",choices:["打消","完了","過去","存続"],ans:0,v:"ず",exp:"未然形「変はら」に接続する「ざり」は打消の助動詞「ず」の連用形です。『淵も瀬も少しも変化していないことだ。』"},
+  {cat:"uchikeshi",q:"「二、三日にあげ<span class='highlight-word'>ず</span>」の「ず」の意味は何か。",choices:["打消","完了","過去","仮定"],ans:0,v:"ず",exp:"下二段動詞の未然形「あげ」に接続する打消の助動詞です。『二、三日と間を置かず』"},
+  {cat:"uchikeshi",q:"「馬の頭も見え<span class='highlight-word'>ざり</span>けり。」の「ざり」の意味は何か。",choices:["打消","完了","強意","存続"],ans:0,v:"ず",exp:"「見え＋ざり＋けり」で「見えなかった」と打消を表します。『馬の頭も見えなかった。』"},
+  {cat:"uchikeshi",q:"「我なら<span class='highlight-word'>なくに</span>」の「なくに」に含まれる「な」の意味は何か。",choices:["打消","完了","禁止","強意"],ans:0,v:"ず",exp:"「〜なくに」の「な」は打消の助動詞「ず」の未然形です。『私のせいではないのに』"},
+  {cat:"uchikeshi",q:"「第一なら<span class='highlight-word'>ずは</span>いかに」の「ずは」の意味は何か。",choices:["〜ないなら","〜ないで","〜なくては","〜ないから"],ans:0,v:"ず",exp:"「ずは」は仮定条件（〜ないなら）を表します。『第一番でないならどうですか。』"},
+  {cat:"uchikeshi",q:"「御覧ぜ<span class='highlight-word'>ぬ</span>日なし。」の「ぬ」の意味は何か。",choices:["打消","完了","過去","断定"],ans:0,v:"ず",exp:"サ変動詞「御覧ず」の未然形「御覧ぜ」に接続する打消の連体形です。『御覧にならない日はない。』"},
+  {cat:"uchikeshi",q:"打消「ず」の補助活用「ざり」系列は何活用するか。",choices:["ラ変型活用","四段型活用","サ変型活用","無変化型"],ans:0,v:"ず",exp:"「ざら／ざり／○／ざる／ざれ／ざれ」とラ変型活用をします。"},
+  {cat:"uchikeshi",q:"「飛鳥川にあら<span class='highlight-word'>ね</span>ば」の「ね」の意味は何か。",choices:["打消","完了","過去","命令"],ans:0,v:"ず",exp:"ラ変動詞「あり」の未然形「あら」に接続する打消の助動詞「ず」の已然形です。『飛鳥川ではないので』"},
+  {cat:"uchikeshi",q:"打消の「ず」の基本（本活用）の活用型は何型か。",choices:["特殊型（無変化・変則）","四段型","ラ変型","形容詞型"],ans:0,v:"ず",exp:"「（な・ず）／（に・ず）／ず／ぬ／ね／○」という特殊な活用をします。"},
+  {cat:"suiryo",q:"「む」「むず」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"む",exp:"「む」「むず」は活用語の未然形に接続します。"},
+  {cat:"suiryo",q:"「む」の已然形を答えよ。",choices:["ま","み","む","め"],ans:3,v:"む",exp:"「む」の活用は「○／○／む／む／め／○」となります。"},
+  {cat:"suiryo",q:"「む」が一人称を主語とする場合、どのような意味になることが多いか。",choices:["推量","意志","適当","勧誘"],ans:1,v:"む",exp:"一人称（私）が主語のときは「意志（〜しよう）」になります。"},
+  {cat:"suiryo",q:"「む」が三人称を主語とする場合、どのような意味になることが多いか。",choices:["意志","推量","適当","仮定"],ans:1,v:"む",exp:"三人称（彼・それ等）が主語のときは「推量（〜だろう）」になります。"},
+  {cat:"suiryo",q:"「深き故あら<span class='highlight-word'>む</span>。」の「む」の意味は何か。",choices:["意志","勧誘","婉曲","推量"],ans:3,v:"む",exp:"「理由があるのだろう」という推量を表します。『深いわけがあるのだろう。』"},
+  {cat:"suiryo",q:"「む」が連体形で体言・助詞に続く場合、どのような意味になることが多いか。",choices:["推量・意志","適当・勧誘","仮定・婉曲","当然・義務"],ans:2,v:"む",exp:"連体形で下接するときは仮定（〜としたら）や婉曲（〜ような）になります。"},
+  {cat:"suiryo",q:"「むず」は、「む」に格助詞「と」とサ変動詞の何がついて変化したものか。",choices:["す","し","さす","しむ"],ans:0,v:"むず",exp:"「む＋と＋す」が縮まって「むず」になりました。"},
+  {cat:"suiryo",q:"「我、人を起こさむ。」の現代語訳を答えよ。",choices:["私が、人を起こすだろう。","私が、人を起こそう。","私が、人を起こすのがよい。","私が、人を起こすような。"],ans:1,v:"む",exp:"一人称「我」が主語なので「〜しよう（意志）」と訳します。"},
+  {cat:"suiryo",q:"「いざ行か<span class='highlight-word'>む</span>」の「む」の意味は何か。",choices:["意志","推量","仮定","勧誘"],ans:0,v:"む",exp:"一人称主語の「む」は「意志（〜しよう）」を表します。『さあ行こう』"},
+  {cat:"suiryo",q:"「明日は雨降ら<span class='highlight-word'>む</span>」の「む」の意味は何か。",choices:["推量","意志","勧誘","婉曲"],ans:0,v:"む",exp:"三人称主語の「む」は「推量（〜だろう）」を表します。『明日は雨が降るだろう』"},
+  {cat:"suiryo",q:"「立ちとまら<span class='highlight-word'>むず</span>」の「むず」の意味は何か。",choices:["意志","推量","完了","断定"],ans:0,v:"むず",exp:"「むず」は「む」より強い意志・推量を表します。『立ち止まろう』"},
+  {cat:"suiryo",q:"「迎へに人々まうで来<span class='highlight-word'>むず</span>。」の「むず」の意味は何か。",choices:["推量","意志","勧誘","仮定"],ans:0,v:"むず",exp:"三人称（人々）が主語なので「推量（〜だろう）」を表します。『迎えに人々が参上するだろう。』"},
+  {cat:"suiryo",q:"「一所でこそ討ち死にをもせ<span class='highlight-word'>め</span>。」の「め」の意味は何か。",choices:["意志","推量","適当","仮定"],ans:0,v:"む",exp:"一人称（私）が主語で「こそ〜め」の係り結びを形成する「意志」です。『同じ所で討ち死にをもしよう。』"},
+  {cat:"suiryo",q:"「足の向きたらむ方へ往な<span class='highlight-word'>むず</span>。」の「むず」の意味は何か。",choices:["意志","推量","完了","断定"],ans:0,v:"むず",exp:"話し手の意向を表す「意志（〜してしまおう）」です。『足の向いた方へ行ってしまおう。』"},
+  {cat:"suiryo",q:"「忍びては参り給ひな<span class='highlight-word'>む</span>や。」の「む」の意味は何か。",choices:["適当・勧誘","推量","意志","仮定"],ans:0,v:"む",exp:"二人称に対する「〜なさったらどうか（勧誘・適当）」を表します。『人目につかぬように参内なさってはどうか』"},
+  {cat:"suiryo",q:"「この御格子は参らでやあら<span class='highlight-word'>むずる</span>。」の「むずる」の意味は何か。",choices:["適当・勧誘","推量","意志","婉曲"],ans:0,v:"むず",exp:"相手に対して「〜するのがよいだろうか（適当・勧誘）」を表します。『御格子はお上げしないでおくのがよいだろうか。』"},
+  {cat:"suiryo",q:"「二人して打た<span class='highlight-word'>む</span>には、侍りなむや。」の「む」の意味は何か。",choices:["仮定","推量","意志","勧誘"],ans:0,v:"む",exp:"「打たむ＋には」の形で「二人で打ったとしたら」という仮定を表します。『二人で打ったとしたら、（無事で）おりましょうか。』"},
+  {cat:"suiryo",q:"「思は<span class='highlight-word'>む</span>子を法師になしたらむこそ」の前者の「む」の意味は何か。",choices:["婉曲","意志","推量","勧誘"],ans:0,v:"む",exp:"連体形で体言「子」を修飾する「婉曲（〜ような）」です。『かわいいと思うような子を法師にしているようなのは、』"},
+  {cat:"suiryo",q:"「心あら<span class='highlight-word'>む</span>友もがな。」の「む」の意味は何か。",choices:["婉曲","推量","意志","仮定"],ans:0,v:"む",exp:"体言「友」に連なる「婉曲（〜ような）」です。『情趣を解するような友がいてほしい。』"},
+  {cat:"suiryo",q:"「悦びをなして参ら<span class='highlight-word'>むずる</span>源氏ども」の「むずる」の意味は何か。",choices:["婉曲","意志","推量","適当"],ans:0,v:"むず",exp:"体言「源氏ども」を修飾する「婉曲（〜ような）」です。『喜んで馳せ参ずるような源氏勢』"},
+  {cat:"suiryo",q:"「我は討ち死にせ<span class='highlight-word'>む</span>と思ふなり。」の「む」の意味は何か。",choices:["意志","推量","勧誘","仮定"],ans:0,v:"む",exp:"一人称「我」が主語のため「意志（〜しよう）」を表します。『俺は討ち死にしようと思うのだ。』"},
+  {cat:"suiryo",q:"「少将をこそ召し返され候は<span class='highlight-word'>め</span>。」の「め」の意味は何か。",choices:["適当・勧誘","推量","意志","仮定"],ans:0,v:"む",exp:"「こそ〜め」の形で二人称に対する「〜なさったらいかがでしょう（適当・勧誘）」を表します。『少将をご召還なさったらいかがでしょう。』"},
+  {cat:"suiryo",q:"「べし」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"べし",exp:"「べし」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"suiryo",q:"「べし」の連用形を2つ答えよ。",choices:["べから・べかり","べく・べかり","べく・べかる","べき・べければ"],ans:1,v:"べし",exp:"「べし」の連用形は本活用が「べく」、補助活用が「べかり」です。"},
+  {cat:"suiryo",q:"「べし」が一人称を主語とする場合、どのような意味になるか。",choices:["推量","意志","可能","当然"],ans:1,v:"べし",exp:"一人称が主語のときは「意志（〜つもりだ）」になります。"},
+  {cat:"suiryo",q:"「羽なければ、空をも飛ぶ<span class='highlight-word'>べから</span>ず。」の「べから」の意味は何か。",choices:["推量","当然","可能","命令"],ans:2,v:"べし",exp:"打消「ず」を伴い「飛ぶことができない」という「可能（不可能）」を表します。『羽がないので、空を飛ぶこともできない。』"},
+  {cat:"suiryo",q:"古語で「べからず」が「不可能」を表す場合、どのような文脈になるか。",choices:["〜するはずがない","〜するべきではない","〜してはならない","〜（ことが）できない"],ans:3,v:"べし",exp:"「〜（ことが）できない」と訳します。"},
+  {cat:"suiryo",q:"「要ある者になる<span class='highlight-word'>べし</span>」の「べし」の意味は何か。",choices:["推量","可能","命令","義務"],ans:0,v:"べし",exp:"「べし」は強い推量（〜に違いない）を表します。『重要な人物になるに違いない』"},
+  {cat:"suiryo",q:"「いかでか留む<span class='highlight-word'>べき</span>」の「べき」の意味は何か。",choices:["可能","推量","命令","義務"],ans:0,v:"べし",exp:"打消や疑問を伴う「べし」は「可能（〜できる）」を表すことが多いです。『どうして引き留めることができようか』"},
+  {cat:"suiryo",q:"「この海にも劣らざる<span class='highlight-word'>べし</span>。」の「べし」の意味は何か。",choices:["推量（確信）","意志","可能","命令"],ans:0,v:"べし",exp:"確信を持った推量（〜にちがいない）を表します。『この海（の深さ）にも劣らないにちがいない。』"},
+  {cat:"suiryo",q:"「この一矢に定む<span class='highlight-word'>べし</span>と思へ。」の「べし」の意味は何か。",choices:["意志","推量","可能","当然"],ans:0,v:"べし",exp:"強く心を固める「意志（必ず〜しよう）」を表します。『この一矢で必ず決着をつけようと思え。』"},
+  {cat:"suiryo",q:"「かならず来<span class='highlight-word'>べき</span>人のもとに」の「べき」の意味は何か。",choices:["当然・義務","可能","意志","命令"],ans:0,v:"べし",exp:"そうなるのが当然であるという「当然（〜はずだ）」を表します。『必ず来るはずの人の所に』"},
+  {cat:"suiryo",q:"「火をつけてもやす<span class='highlight-word'>べき</span>よし仰せたまふ。」の「べき」の意味は何か。",choices:["命令","可能","意志","推量"],ans:0,v:"べし",exp:"命じる文脈における「命令（〜しなさい）」を表します。『火をつけて燃やしなさいという旨をお命じになる。』"},
+  {cat:"suiryo",q:"「家の作りやうは、夏をむねとす<span class='highlight-word'>べし</span>。」の「べし」の意味は何か。",choices:["適当・勧誘","推量","可能","意志"],ans:0,v:"べし",exp:"そうすることが適切であるという「適当（〜のがよい）」を表します。『家の作り方は、夏を主とするのがよい。』"},
+  {cat:"suiryo",q:"「我ふたたび俳諧を言ふ<span class='highlight-word'>べから</span>ず。」の「べから」の意味は何か。",choices:["意志","不可能","禁止","推量"],ans:0,v:"べし",exp:"一人称「我」の固い決意を表す「打消意志（〜ないつもりだ）」です。『私は二度と俳諧を口にしないつもりだ。』"},
+  {cat:"suiryo",q:"「なんぢ手柄にこの冠を置く<span class='highlight-word'>べし</span>。」の「べし」の意味は何か。",choices:["命令","推量","可能","当然"],ans:0,v:"べし",exp:"二人称「なんぢ」への指示を表す「命令（〜せよ）」です。『おまえは立派な仕事としてこの初句をつけよ。』"},
+  {cat:"uchikeshi_suiryo",q:"「じ」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"じ",exp:"打消推量・意志の「じ」は未然形に接続します。"},
+  {cat:"uchikeshi_suiryo",q:"「まじ」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"まじ",exp:"「まじ」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"uchikeshi_suiryo",q:"「じ」の活用型は何型か。",choices:["四段型","無変化型","形容詞型","ラ変型"],ans:1,v:"じ",exp:"「じ」はすべての活用形で「じ」のままである無変化型です。"},
+  {cat:"uchikeshi_suiryo",q:"「まじ」の連用形の補助活用を答えよ。",choices:["まじく","まじき","まじかり","まじけれ"],ans:2,v:"まじ",exp:"「まじ」の補助活用はカリ活用（まじから／まじかり／○／まじかる／○／○）です。"},
+  {cat:"uchikeshi_suiryo",q:"「じ」「まじ」が一人称を主語とする場合、どのような意味になるか。",choices:["打消推量","打消当然","打消意志","禁止"],ans:2,v:"じ",exp:"一人称が主語のときは「打消意志（〜ないつもりだ）」になります。"},
+  {cat:"uchikeshi_suiryo",q:"「な言ひそ、我も語ら<span class='highlight-word'>じ</span>。」の「じ」の意味は何か。",choices:["打消意志","打消推量","禁止","不可能"],ans:0,v:"じ",exp:"一人称「我」が主語であるため打消意志（〜ないつもりだ）となります。『言わないでおくれ、私も話すまい。』"},
+  {cat:"uchikeshi_suiryo",q:"「『夢を人に聞かす<span class='highlight-word'>まじき</span>なり』と言ひ伝へたり。」の「まじき」の意味は何か。",choices:["打消適当・禁止","打消推量","不可能","打消意志"],ans:0,v:"まじ",exp:"「まじ」は「べし」の打消で、禁止・打消適当（〜てはならない）を表します。『「夢を人に聞かせてはならないのだ」と言い伝えている。』"},
+  {cat:"uchikeshi_suiryo",q:"「誰ならむ。おぼろけにはあら<span class='highlight-word'>じ</span>。」の「じ」の意味は何か。",choices:["打消推量","打消意志","禁止","不可能"],ans:0,v:"じ",exp:"三人称の客観的事態に対する「打消推量（〜ないだろう）」を表します。『誰であろうか。並々の人ではあるまい。』"},
+  {cat:"uchikeshi_suiryo",q:"「私の従者をば具し候は<span class='highlight-word'>じ</span>。」の「じ」の意味は何か。",choices:["打消意志","打消推量","禁止","不可能"],ans:0,v:"じ",exp:"一人称（私）の意向を表す「打消意志（〜まい）」です。『私的な供人は連れていきますまい。』"},
+  {cat:"uchikeshi_suiryo",q:"「もとよりこの情浮かぶ<span class='highlight-word'>まじ</span>。」の「まじ」の意味は何か。",choices:["打消推量","打消意志","禁止","不可能"],ans:0,v:"まじ",exp:"客観的推測を表す「打消推量（〜そうにない）」です。『もちろんこの感情は浮かばないだろう。』"},
+  {cat:"uchikeshi_suiryo",q:"「ただ今は見る<span class='highlight-word'>まじ</span>。」の「まじ」の意味は何か。",choices:["打消意志","打消推量","禁止","不可能"],ans:0,v:"まじ",exp:"話し手の決意を表す「打消意志（〜まい）」です。『今ここでは見るまい。』"},
+  {cat:"uchikeshi_suiryo",q:"「え疎みはつ<span class='highlight-word'>まじ</span>。」の「まじ」の意味は何か。",choices:["不可能推量","打消意志","禁止","打消当然"],ans:0,v:"まじ",exp:"「え〜まじ」の形で「〜できそうもない（不可能推量）」を表します。『見捨ててしまうことはできないだろう。』"},
+  {cat:"uchikeshi_suiryo",q:"「傷害のおそれおはします<span class='highlight-word'>まじき</span>御身にて」の「まじき」の意味は何か。",choices:["打消当然","打消意志","禁止","不可能"],ans:0,v:"まじ",exp:"「〜はずがない（打消当然）」を表します。『傷を受ける心配がおありになるはずのないご身分で』"},
+  {cat:"uchikeshi_suiryo",q:"「物羨みはす<span class='highlight-word'>まじき</span>事なり」の「まじき」の意味は何か。",choices:["禁止・不適当","打消推量","不可能","打消意志"],ans:0,v:"まじ",exp:"「〜してはならない（禁止・不適当）」を表します。『他人をうらやむことはしてはならないことだ』"},
+  {cat:"genzai_suiryo",q:"「らむ」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"らむ",exp:"「らむ」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"genzai_suiryo",q:"「らむ」の已然形を答えよ。",choices:["らま","らみ","らむ","らめ"],ans:3,v:"らむ",exp:"「らむ」の活用は「○／○／らむ／らむ／らめ／○」となります。"},
+  {cat:"genzai_suiryo",q:"「かの人もいかに思ふ<span class='highlight-word'>らむ</span>」の「らむ」の意味は何か。",choices:["現在推量","過去推量","原因推量","伝聞"],ans:0,v:"らむ",exp:"終止形に接続する「らむ」は目の前にない現在の事態を推量します。『あの人もどのように思っているのだろうか』"},
+  {cat:"genzai_suiryo",q:"「いみじと思ふ<span class='highlight-word'>らめ</span>ど、いと口惜し。」の「らめ」の意味は何か。",choices:["現在推量","過去推量","伝聞","原因推量"],ans:0,v:"らむ",exp:"目の前にない相手の現在の心境を推量する「現在推量」の已然形です。『自分では立派だと思っているだろうが、全くがっかりさせられる。』"},
+  {cat:"genzai_suiryo",q:"「なほさだかにと思ひてや問ふ<span class='highlight-word'>らん</span>。」の「らん」の意味は何か。",choices:["現在の原因推量","現在推量","過去推量","伝聞"],ans:0,v:"らむ",exp:"「や〜らん」で現在の動作の理由を推量する「現在の原因推量」です。『もっとはっきり（知りたい）と思って尋ねるのだろうか。』"},
+  {cat:"genzai_suiryo",q:"「人の言ふ<span class='highlight-word'>らむ</span>ことをまねぶらむよ。」の前者の「らむ」の意味は何か。",choices:["現在の伝聞・婉曲","現在推量","過去推量","意志"],ans:0,v:"らむ",exp:"体言「こと」を修飾する連体形で「〜ような（婉曲・伝聞）」を表します。『（鸚鵡は）人間が言うようなことを真似するとかいうことだよ。』"},
+  {cat:"kako_suiryo",q:"「けむ」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:1,v:"けむ",exp:"過去推量の「けむ」は連用形に接続します。"},
+  {cat:"kako_suiryo",q:"「いかなる契りにかはあり<span class='highlight-word'>けむ</span>」の「けむ」の意味は何か。",choices:["過去推量","過去伝聞","過去","完了"],ans:0,v:"けむ",exp:"連用形に接続する「けむ」は「過去推量（〜ただろう）」を表します。『どのような前世の宿縁であったのだろうか』"},
+  {cat:"kako_suiryo",q:"「露を、などあだなるものと思ひ<span class='highlight-word'>けむ</span>」の「けむ」の意味は何か。",choices:["過去の原因推量","過去推量","過去伝聞","過去"],ans:0,v:"けむ",exp:"疑問詞「など」を伴い、過去の動作の理由を問う「過去の原因推量」です。『露をどうしてはかなく消えやすいものと（今まで）思っていたのだろう。』"},
+  {cat:"kako_suiryo",q:"「檜垣の御といひ<span class='highlight-word'>けむ</span>人に、いかであはむ。」の「けむ」の意味は何か。",choices:["過去の伝聞・婉曲","過去推量","過去原因推量","完了"],ans:0,v:"けむ",exp:"体言「人」に連なる連体形で「〜と言ったとかいう（過去の伝聞・婉曲）」です。『檜垣の御といったとかいう人に、何とかして会おう。』"},
+  {cat:"suitei",q:"「らし」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"らし",exp:"「らし」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"suitei",q:"「めり」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"めり",exp:"「めり」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"suitei",q:"「春立ちにける<span class='highlight-word'>らし</span>」の「らし」の意味は何か。",choices:["推定","意志","比況","断定"],ans:0,v:"らし",exp:"根拠に基づく客観的な「推定（〜らしい）」を表します。『春が訪れたらしい』"},
+  {cat:"suitei",q:"「日も暮れ方になりぬ<span class='highlight-word'>めり</span>」の「めり」の意味は何か。",choices:["視覚的推定","聴覚的推定","過去","完了"],ans:0,v:"めり",exp:"視覚的根拠に基づく「推定（〜ようだ）」を表します。『日も夕方になってしまったようだ』"},
+  {cat:"suitei",q:"「深山には霰降る<span class='highlight-word'>らし</span>」の「らし」の意味は何か。",choices:["推定","推量","断定","比況"],ans:0,v:"らし",exp:"周囲の根拠（紅葉の状況）から確信をもって客観的に判断する「推定」です。『奥山にはあられが降っているらしい。』"},
+  {cat:"suitei",q:"「簾少し上げて、花奉る<span class='highlight-word'>めり</span>。」の「めり」の意味は何か。",choices:["視覚的推定","聴覚的推定","婉曲","伝聞"],ans:0,v:"めり",exp:"目の前の光景を直接見て判断する「視覚的推定（〜ように見える）」です。『すだれを少し巻き上げて、（仏に）花をお供えするように見える。』"},
+  {cat:"suitei",q:"「子になり給ふべき人な<span class='highlight-word'>めり</span>。」の「めり」の意味は何か。",choices:["推定・婉曲","断定","過去","伝聞"],ans:0,v:"めり",exp:"「なんめり（撥音便）」の「ん」が表記省略された推定・婉曲の用法です。『（あなたは私の）子におなりになるはずの人であるようだ。』"},
+  {cat:"suitei",q:"「らし」「めり」「なり（推定）」の根拠の違いとして正しい組み合わせはどれか。",choices:["らし:客観的事実／めり:視覚／なり:聴覚","らし:視覚／めり:聴覚／なり:触覚","らし:主観／めり:過去／なり:未来","らし:和歌／めり:会話／なり:地の文"],ans:0,v:"らし",exp:"らし＝根拠ある客観事実、めり＝目で見える事態、なり＝耳で聞く音・声です。"},
+  {cat:"denbun",q:"推定・伝聞の「なり」は何形に接続するか。",choices:["未然形","連用形","終止形（ラ変型は連体形）","已然形"],ans:2,v:"なり（伝聞）",exp:"伝聞・推定の「なり」は終止形（ラ変型には連体形）に接続します。"},
+  {cat:"denbun",q:"「侍従大納言のむすめ、なくなりたまひぬ<span class='highlight-word'>なり</span>」の「なり」の意味は何か。",choices:["伝聞・推定","断定","過去","完了"],ans:0,v:"なり（伝聞）",exp:"終止形接続の「なり」は耳で聞いた伝聞（〜そうだ）を表します。『侍従大納言の娘がお亡くなりになったそうだ』"},
+  {cat:"denbun",q:"「笛をいとをかしく吹き澄まして、過ぎぬ<span class='highlight-word'>なり</span>。」の「なり」の意味は何か。",choices:["推定（聴覚）","断定","過去","伝聞"],ans:0,v:"なり（伝聞）",exp:"聞こえる笛の音を根拠にして判断する「聴覚的推定（〜ようだ）」です。『笛をたいそうすばらしく澄んだ音色で吹いて、通り過ぎてしまったようだ。』"},
+  {cat:"denbun",q:"「ゆかしくし給ふ<span class='highlight-word'>なる</span>ものをたてまつらむ。」の「なる」の意味は何か。",choices:["伝聞","断定","存在","過去"],ans:0,v:"なり（伝聞）",exp:"噂や人からの情報を聞いた「伝聞（〜と聞いている）」の連体形「なる」です。『見たいと思っていらっしゃるというものをさし上げよう。』"},
+  {cat:"hanjitsu",q:"「まし」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"まし",exp:"反実仮想の「まし」は未然形に接続します。"},
+  {cat:"hanjitsu",q:"「鏡に色・形あら<span class='highlight-word'>まし</span>かば、うつらざら<span class='highlight-word'>まし</span>。」の「まし」の意味は何か。",choices:["反実仮想","ためらいの意志","希望","推量"],ans:0,v:"まし",exp:"事実に反する仮定の想像（もし〜なら…だろうに）を表します。『もし鏡に色や形があったら、（ものの姿が正しく）映らないだろうに。』"},
+  {cat:"hanjitsu",q:"「これに何を書か<span class='highlight-word'>まし</span>。」の「まし」の意味は何か。",choices:["ためらいの意志","反実仮想","希望","推量"],ans:0,v:"まし",exp:"疑問語「何」を伴い「〜したらよかろうか」と思い悩む「ためらいの意志」です。『これに何を書いたらよかろうか。』"},
+  {cat:"ukemi",q:"「る」は四段・ナ変・ラ変動詞の何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"る",exp:"「る」はア段音（四段・ナ変・ラ変の未然形）に接続します。"},
+  {cat:"ukemi",q:"「らる」は四段・ナ変・ラ変以外の動詞の何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"らる",exp:"「らる」はア段音以外の未然形に接続します。"},
+  {cat:"ukemi",q:"「人に笑は<span class='highlight-word'>る</span>」の「る」の意味は何か。",choices:["受身","自発","可能","尊敬"],ans:0,v:"る",exp:"他者からの動作を受ける「受身（〜される）」を表します。『人に笑われる』"},
+  {cat:"ukemi",q:"「ふるさと、限りなく思ひ出で<span class='highlight-word'>らる</span>。」の「らる」の意味は何か。",choices:["自発","受身","可能","尊敬"],ans:0,v:"らる",exp:"自然と思いが湧き上がる「自発（自然と〜される）」を表します。『住み慣れたもとの家がたいそう思い出される。』"},
+  {cat:"ukemi",q:"「人知れずうち泣か<span class='highlight-word'>れ</span>ぬ。」の「れ」の意味は何か。",choices:["自発","受身","可能","尊敬"],ans:0,v:"る",exp:"感情動詞「泣く」に付いて「自然と泣けてしまった」を表す「自発」の連用形です。『思いず泣けてしまった。』"},
+  {cat:"ukemi",q:"「恐ろしくて寝も寝ら<span class='highlight-word'>れ</span>ず。」の「れ」の意味は何か。",choices:["可能（不可能）","自発","受身","尊敬"],ans:0,v:"らる",exp:"打消「ず」を伴い「眠ることもできない」という不可能を表す「可能」の未然形です。『恐ろしくて眠ることもできない。』"},
+  {cat:"ukemi",q:"「人にほめら<span class='highlight-word'>るる</span>婿」の「るる」の意味は何か。",choices:["受身","自発","可能","尊敬"],ans:0,v:"らる",exp:"「人に〜される」という文脈の「受身」の連体形です。『関にほめられる婿』"},
+  {cat:"ukemi",q:"「母の悲しがら<span class='highlight-word'>るる</span>ことは。」の「るる」の意味は何か。",choices:["尊敬","自発","受身","可能"],ans:0,v:"らる",exp:"高貴な身分（母）の動作を高める「尊敬」の連体形です。『母親が悲しがられることといったら（格別である）。』"},
+  {cat:"shieki",q:"「す」は四段・ナ変・ラ変動詞の何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"す",exp:"「す」はア段音（四段・ナ変・ラ変の未然形）に接続します。"},
+  {cat:"shieki",q:"「さす」は四段・ナ変・ラ変以外の動詞の何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"さす",exp:"「さす」はア段音以外の未然形に接続します。"},
+  {cat:"shieki",q:"「主、人々を呼びて、格子を上げ<span class='highlight-word'>さす</span>。」の「さす」の意味は何か。",choices:["使役","尊敬","受身","可能"],ans:0,v:"さす",exp:"他者に動作を行わせる「使役（〜させる）」を表します。『主人が人々を呼んで格子を上げさせる。』"},
+  {cat:"shieki",q:"「声高にものも言は<span class='highlight-word'>せ</span>ず。」の「せ」の意味は何か。",choices:["使役","尊敬","受身","過去"],ans:0,v:"す",exp:"尊敬語を伴わない場合はすべて使役です。"},
+  {cat:"shieki",q:"「秋田を呼びてつけ<span class='highlight-word'>さす</span>。」の「さす」の意味は何か。",choices:["使役","尊敬","可能","自発"],ans:0,v:"さす",exp:"ア段音以外（「つけ」）の未然形に接続する使役の助動詞です。『秋田を呼んで（名前を）つけさせる。』"},
+  {cat:"shieki",q:"「君はあの松原へ入ら<span class='highlight-word'>せ</span>給へ。」の「せ」の意味は何か。",choices:["尊敬","使役","受身","過去"],ans:0,v:"す",exp:"「せ＋給ふ（尊敬の補助動詞）」の組み合わせです。"},
+  {cat:"ganbo",q:"「まほし」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:0,v:"まほし",exp:"「まほし」は未然形に接続します。"},
+  {cat:"ganbo",q:"「たし」は何形に接続するか。",choices:["未然形","連用形","終止形","連体形"],ans:1,v:"たし",exp:"「たし」は連用形に接続します。"},
+  {cat:"ganbo",q:"「名残りを、ひとめなりとも見<span class='highlight-word'>まほし</span>」の「まほし」の意味は何か。",choices:["願望","推量","意志","比況"],ans:0,v:"まほし",exp:"未然形に接続し、自己の「願望（〜したい）」を表します。『名残を、一目だけでも見たい』"},
+  {cat:"ganbo",q:"「我が手から、生首をも見<span class='highlight-word'>たし</span>」の「たし」の意味は何か。",choices:["願望","完了","過去","推定"],ans:0,v:"たし",exp:"連用形に接続し、自己の「願望（〜したい）」を表します。『私の手で、生首を見たい』"},
+  {cat:"ganbo",q:"「続きの見<span class='highlight-word'>まほしく</span>おぼゆれど」の「まほしく」の意味は何か。",choices:["願望","意志","推量","推定"],ans:0,v:"まほし",exp:"「見＋まほしく」で「見たい」という自己の願望を表す連用形です。『続きが見たく思われるが、』"},
+  {cat:"ganbo",q:"「御主へ返し<span class='highlight-word'>たし</span>。」の「たし」の意味は何か。",choices:["願望","推量","意志","完了"],ans:0,v:"たし",exp:"連用形「返し」に接続し「返したい」という願望を表します。『持ち主へ（小判を）返したい。』"},
+  {cat:"hikyo",q:"「ごとし」は何形に接続するか。",choices:["未然形・連用形","終止形・命令形","体言・連体形・助詞「の・が」","已然形のみ"],ans:2,v:"ごとし",exp:"「ごとし」は体言、連体形、助詞「の」「が」に接続します。"},
+  {cat:"hikyo",q:"「飛ぶ鳥の<span class='highlight-word'>ごとし</span>」の「ごとし」の意味は何か。",choices:["比況","例示","推定","断定"],ans:0,v:"ごとし",exp:"「〜のようだ」という比況を表します。『飛ぶ鳥のようだ』"},
+  {cat:"hikyo",q:"「つひに本意の<span class='highlight-word'>ごとく</span>あひにけり。」の「ごとく」の意味は何か。",choices:["比況","例示","推定","断定"],ans:0,v:"ごとし",exp:"格助詞「の」に接続し「〜のように」と例える比況の連用形です。『とうとうはじめの望みのように結婚した。』"},
+  {cat:"hikyo",q:"「往生要集<span class='highlight-word'>ごときの</span>抄物を入れたり。」の「ごときの」の意味は何か。",choices:["例示","比況","推定","断定"],ans:0,v:"ごとし",exp:"同類のものを例として挙げる「例示（〜のような）」の連体形です。『往生要集などの書物の抜き書きを入れている。』"}
+];
+
+var currentStage=1,trapCount=5,currentTrapId=null,stageQuestions=[],recentQuestionIndices=[];
+
+window.showCustomAlert = function(msg, opts) {
+  var m=document.getElementById('custom-alert-modal'), me=document.getElementById('custom-alert-msg'), be=document.getElementById('custom-alert-btns');
+  if(!m || !me || !be) { if(opts && opts.confirm){ if(confirm(msg)) opts.onYes(); }else{ alert(msg); } return; }
+  me.innerText = msg; be.innerHTML = "";
+  if(opts && opts.confirm) {
+    var bY=document.createElement('button'); bY.className='btn-small'; bY.innerText='はい';
+    bY.onclick=function(){ m.style.display='none'; if(opts.onYes) opts.onYes(); };
+    var bN=document.createElement('button'); bN.className='btn-small btn-reset'; bN.innerText='いいえ';
+    bN.onclick=function(){ m.style.display='none'; };
+    be.appendChild(bY); be.appendChild(bN);
+  } else {
+    var bO=document.createElement('button'); bO.className='btn-small'; bO.innerText='OK';
+    bO.onclick=function(){ m.style.display='none'; }; be.appendChild(bO);
+  }
+  m.style.display='flex';
+};
+
+window.formatVerticalText = function(t) {
+  if(!t) return "";
+  var sv = '<svg width="1em" height="1em" viewBox="0 0 100 100" style="display:inline-block; vertical-align:middle; margin:0; writing-mode: horizontal-tb;"><line x1="15" y1="85" x2="85" y2="15" stroke="currentColor" stroke-width="4"/></svg>';
+  return t.replace(/[\/／]/g, sv);
+};
+
+window.toggleCheckboxes = function(c) {
+  var cb = document.querySelectorAll('#verb-checkboxes input[type="checkbox"]');
+  for(var i=0; i<cb.length; i++) cb[i].checked=c;
+};
+
+function initFloatingBg() {
+  var c=document.getElementById('bg-chars-container'); if(!c) return; c.innerHTML="";
+  var cw=100/3, ch=100/3, ix=[];
+  for(var i=0; i<9; i++) ix.push(i);
+  for(var j=8; j>0; j--){ var r=Math.floor(Math.random()*(j+1)), t=ix[j]; ix[j]=ix[r]; ix[r]=t; }
+  for(var k=0; k<9; k++) {
+    var d=document.createElement('div'); d.className='floating-char-wrap';
+    d.style.left = Math.max(1, Math.min(((ix[k]%3)*cw)+(Math.random()*15), 75))+"%";
+    d.style.top = Math.max(1, Math.min((Math.floor(ix[k]/3)*ch)+(Math.random()*15), 75))+"%";
+    d.style.animationDelay = (Math.random()*5)+"s"; d.style.animationDuration = (8+Math.random()*8)+"s";
+    var img=document.createElement('img'); img.src=sampleImgs[ix[k]%sampleImgs.length];
+    d.appendChild(img); c.appendChild(d);
+  }
+}
+
+window.startGame = function(isCont) {
+  var n=1;
+  if(isCont) {
+    try { var s=localStorage.getItem('cleared_stages_v4'); if(s) { var a=JSON.parse(s); if(Array.isArray(a)&&a.length>0) n=Math.max.apply(null,a)+1; } } catch(e){ localStorage.removeItem('cleared_stages_v4'); }
+  }
+  currentStage = n>13 ? 13 : n; window.setupStage();
+};
+
+window.resetGame = function() {
+  window.showCustomAlert("進捗をリセットしますか？", {
+    confirm: true,
+    onYes: function() {
+      try { localStorage.removeItem('cleared_stages_v4'); } catch(e) {}
+      currentStage=1; recentQuestionIndices=[]; window.switchScreen('top-screen');
+    }
+  });
+};
+
+window.switchScreen = function(id) {
+  var s=document.querySelectorAll('.screen'); for(var i=0; i<s.length; i++) s[i].classList.remove('active');
+  var t=document.getElementById(id); if(t) t.classList.add('active');
+};
+
+function getFilteredQuestions() {
+  var c=document.querySelectorAll('#verb-checkboxes input:checked'), a=[];
+  for(var i=0; i<c.length; i++) a.push(c[i].value);
+  var f=[]; if(a.length>0) f=fullQuizDatabase.filter(function(q){ return a.indexOf(q.cat)!==-1; });
+  if(f.length===0) f=[].concat(fullQuizDatabase);
+  return f;
+}
+
+window.setupStage = function() {
+  try {
+    trapCount=5; var d=stages[currentStage-1]; stageQuestions=getFilteredQuestions();
+    if(!stageQuestions || stageQuestions.length===0) stageQuestions=fullQuizDatabase;
+    var st=document.getElementById('stage-title'); if(st) st.innerText="ステージ "+currentStage+" : "+d.name;
+    var ri=document.getElementById('charafreed-info'); if(ri) ri.style.display='none';
+    var it=document.getElementById('stage-instruction-text'); if(it) it.style.display='block';
+    var tb=document.getElementById('btn-top-back'); if(tb) tb.style.display='inline-block';
+    var ci=document.getElementById('char-img');
+    if(ci) { ci.className='character-img'; ci.src=d.img; if(d.name==="和泉式部") ci.className='character-img custom-full-img'; }
+    var pm=["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11","p12","p13"], pid=pm[(currentStage-1)%pm.length];
+    for(var i=1; i<=5; i++) {
+      var gp=document.getElementById("trap-"+i), pp=document.getElementById("svg-path-"+i);
+      if(gp && pp) {
+        gp.classList.remove('trap-part-hidden'); pp.setAttribute('fill', 'url(#'+pid+')');
+        gp.onclick=null; pp.onclick=null;
+        var bC = (function(id){ return function(e){ e.preventDefault(); e.stopPropagation(); window.openQuiz(id); }; })(i);
+        gp.onclick=bC; pp.onclick=bC;
+      }
+    }
+  } catch(e) { alert("エラー:"+e.message); } finally { window.switchScreen('game-screen'); }
+};
+
+window.openQuiz = function(tId) {
+  try {
+    currentTrapId=tId;
+    if(!stageQuestions||stageQuestions.length===0) stageQuestions=getFilteredQuestions();
+    if(!stageQuestions||stageQuestions.length===0) { alert("問題データがありません。"); return; }
+    var ps=stageQuestions.length, mh=ps>30 ? 30 : Math.max(1,ps-2), av=[];
+    for(var i=0; i<ps; i++) if(recentQuestionIndices.indexOf(i)===-1) av.push(i);
+    if(av.length===0) { av=[]; for(var j=0; j<ps; j++) av.push(j); }
+    var sq=av[Math.floor(Math.random()*av.length)];
+    recentQuestionIndices.push(sq); if(recentQuestionIndices.length>mh) recentQuestionIndices.shift();
+    var qz=stageQuestions[sq], qm=document.getElementById('quiz-modal');
+    if(qm) { qm.dataset.qIndex=sq; qm.scrollTop=0; }
+    var qq=document.getElementById('quiz-question'); if(qq&&qz) qq.innerHTML=qz.q;
+    var qc=document.getElementById('quiz-choices');
+    if(qc&&qz) {
+      qc.innerHTML=""; var co=qz.choices.map(function(t,x){ return {t:t, ox:x}; });
+      for(var k=co.length-1; k>0; k--){ var r=Math.floor(Math.random()*(k+1)), tp=co[k]; co[k]=co[r]; co[r]=tp; }
+      co.forEach(function(o){
+        var b=document.createElement("button"); b.type="button"; b.innerText=o.t;
+        b.onclick=function(){ window.checkAnswer(o.ox, qz.ans); }; qc.appendChild(b);
+      });
+    }
+    var qf=document.getElementById('quiz-feedback'); if(qf) { qf.style.display='none'; qf.className=""; }
+    var qv=document.getElementById('quiz-verb-info'); if(qv) { qv.style.display='none'; qv.scrollTop=0; qv.scrollLeft=0; }
+    var nq=document.getElementById('btn-next-quiz'); if(nq) nq.style.display='none';
+    var cq=document.getElementById('btn-close-quiz'); if(cq) cq.style.display='none';
+    if(qm) qm.style.display='flex';
+  } catch(err) { alert("エラー:"+err.message); }
+};
+
+window.checkAnswer = function(sel, cor) {
+  var bs=document.querySelectorAll('#quiz-choices button'); for(var i=0; i<bs.length; i++) bs[i].disabled=true;
+  var qi=parseInt(document.getElementById('quiz-modal').dataset.qIndex, 10), qz=stageQuestions[qi], vd=verbMaster[qz.v];
+  bs.forEach(function(b){ if(b.innerText===qz.choices[cor]) b.classList.add('correct-btn'); });
+
+  if(vd) {
+    var vn=qz.v, fvn=window.formatVerticalText(vn), fimi=window.formatVerticalText(vd.imi), fset=window.formatVerticalText(vd.setsuzoku), fyk=window.formatVerticalText(vd.yaku);
+    var re=qz.exp, tm=re.match(/『([^』]+)』/), tt="", et=re;
+    if(tm) { tt=tm[1]; et=re.replace(/『[^』]+』/,'').trim(); }
+    var ec=document.getElementById('quiz-explanation-container');
+    if(ec) {
+      ec.innerHTML=""; var pe=document.createElement('p'); pe.className='exp-para-block'; pe.innerHTML="【解説】 "+window.formatVerticalText(et); ec.appendChild(pe);
+      if(tt) { var pt=document.createElement('p'); pt.className='exp-para-block'; pt.innerHTML="【現代語訳】 "+window.formatVerticalText(tt); ec.appendChild(pt); }
+    }
+    var fk=window.formatVerticalText(vd.katsuyo.replace(/\s+/g,''));
+    if(fvn==="ごとくなり") fvn="ごとく<br>なり"; if(fvn.indexOf("（")!==-1) fvn=fvn.replace("（","<br><span style='white-space:nowrap'>（").replace("）","）</span>");
+    document.getElementById('verb-name').innerHTML=fvn; document.getElementById('verb-imi').innerHTML=fimi;
+    document.getElementById('verb-setsuzoku').innerHTML=fset; document.getElementById('verb-katsuyo').innerHTML=fk; document.getElementById('verb-yaku').innerHTML=fyk;
+    var ib=document.getElementById('quiz-verb-info'); if(ib) ib.style.display='block';
+    setTimeout(function(){ var mb=document.getElementById('quiz-modal'); if(mb) mb.scrollTop=0; if(ib){ib.scrollLeft=0; ib.scrollTop=0;} }, 50);
+  }
+  
+  var fb=document.getElementById('quiz-feedback');
+  if(fb) {
+    fb.style.display='block'; fb.className=""; void fb.offsetWidth; fb.className="feedback-pop";
+    if(parseInt(sel,10)===parseInt(cor,10)) {
+      fb.style.color="#1e90ff"; fb.innerText="大正解！！"; var nq=document.getElementById('btn-next-quiz'); if(nq) nq.style.display='block';
+    } else {
+      fb.style.color="#ff1493"; fb.innerText="ザンネン..."; var cq=document.getElementById('btn-close-quiz'); if(cq) cq.style.display='block';
+    }
+  }
+};
+
+window.nextQuiz = function() {
+  var qm=document.getElementById('quiz-modal'); if(qm){ qm.style.display='none'; qm.scrollTop=0; }
+  var ib=document.getElementById('quiz-verb-info'); if(ib){ ib.scrollTop=0; ib.scrollLeft=0; }
+  var tp=document.getElementById("trap-"+currentTrapId); if(tp) tp.classList.add('trap-part-hidden');
+  trapCount--; checkClear();
+};
+
+window.closeQuiz = function() {
+  var qm=document.getElementById('quiz-modal'); if(qm){ qm.style.display='none'; qm.scrollTop=0; }
+  var ib=document.getElementById('quiz-verb-info'); if(ib){ ib.scrollTop=0; ib.scrollLeft=0; }
+};
+
+function checkClear() {
+  if(trapCount===0) {
+    var ci=document.getElementById('char-img'), cd=stages[currentStage-1];
+    if(ci) { if(cd.freedImg) ci.src=cd.freedImg; ci.classList.add('freed'); }
+    document.getElementById('freed-name').innerText=cd.name; document.getElementById('freed-poem').innerHTML=cd.poem;
+    document.getElementById('freed-trans').innerHTML=cd.trans; document.getElementById('freed-bio').innerText=cd.bio;
+    var isA=false;
+    try {
+      var sv=localStorage.getItem('cleared_stages_v4'), ls=[];
+      if(sv){ var ps=JSON.parse(sv); if(Array.isArray(ps)) ls=ps; }
+      if(ls.indexOf(currentStage)===-1) { ls.push(currentStage); localStorage.setItem('cleared_stages_v4', JSON.stringify(ls)); }
+      if(ls.length>=13) isA=true;
+    } catch(e) { localStorage.removeItem('cleared_stages_v4'); }
+    
+    setTimeout(function() {
+      if(isA) { window.showEnding(); return; }
+      var it=document.getElementById('stage-instruction-text'); if(it) it.style.display='none';
+      var tb=document.getElementById('btn-top-back'); if(tb) tb.style.display='none';
+      var ri=document.getElementById('charafreed-info'); if(ri) ri.style.display='block';
+    }, 1000);
+  }
+}
+
+window.clickCharacter = function(ix) { window.showCharacterDetail(ix); };
+window.clickStage = function(sn) { currentStage=sn; window.setupStage(); };
+
+window.openPictureBook = function(fg) {
+  var sv=document.querySelectorAll('#verb-checkboxes input:checked');
+  if(sv.length===0) { window.showCustomAlert("助動詞を選択してください"); return; }
+  var cl=[];
+  try { var s=localStorage.getItem('cleared_stages_v4'); if(s) { var p=JSON.parse(s); if(Array.isArray(p)) cl=p; } } catch(e) { localStorage.removeItem('cleared_stages_v4'); }
+  if(cl.length>=13) { window.showEnding(); return; }
+  
+  var ge=document.getElementById('book-guide-text');
+  if(ge) { if(cl.length===0) ge.innerText="※「？」をタップすると問題に進みます。"; else ge.innerText="※「？」をタップすると問題に進みます。イラストをタップすると詳細解説が見られます。"; }
+  
+  var gd=document.getElementById('silhouette-grid');
+  if(gd) {
+    gd.innerHTML="";
+    for(var i=1; i<=13; i++) {
+      var d=document.createElement('div'); d.className='sil-char';
+      if(cl.indexOf(i)!==-1) {
+        d.classList.add('cleared'); d.setAttribute('onclick', 'window.clickCharacter('+(i-1)+')');
+        var zC=stages[i-1].needsExtraZoom?"img-extra-zoom":"", cC=stages[i-1].name==="和泉式部"?"custom-thumb":"";
+        d.innerHTML='<img src="'+(stages[i-1].freedImg||stages[i-1].img)+'" class="'+(zC+" "+cC).trim()+'">';
+      } else { d.innerText="?"; d.setAttribute('onclick', 'window.clickStage('+i+')'); }
+      gd.appendChild(d);
+    }
+  }
+  window.switchScreen('progress-screen');
+};
+
+window.showCharacterDetail = function(ix) {
+  var cd=stages[ix]; document.getElementById('detail-name').innerText=cd.name; document.getElementById('detail-poem').innerHTML=cd.poem;
+  document.getElementById('detail-trans').innerHTML=cd.trans; document.getElementById('detail-bio').innerText=cd.bio;
+  var di=document.getElementById('detail-img');
+  if(di) { di.src=cd.freedImg||cd.img; di.className=""; if(cd.name==="和泉式部") di.classList.add("custom-thumb"); else if(cd.needsExtraZoom) di.classList.add("img-extra-zoom"); }
+  window.switchScreen('character-detail-screen');
+};
+
+window.handleDetailBack = function() {
+  var cl=[]; try{ var s=localStorage.getItem('cleared_stages_v4'); if(s){ var p=JSON.parse(s); if(Array.isArray(p)) cl=p; } }catch(e){}
+  if(cl.length>=13) window.showEnding(); else window.openPictureBook(false);
+};
+
+function createConfetti() {
+  var bx=document.getElementById('confetti-box'); if(!bx) return; bx.innerHTML="";
+  var cs=['#f44336','#e91e63','#9c27b0','#673ab7','#3f51b5','#2196f3','#03a9f4','#00bcd4','#009688','#4caf50','#8bc34a','#cddc39','#ffeb3b','#ffc107','#ff9800','#ff5722'];
+  for(var i=0; i<60; i++) {
+    var p=document.createElement('div'); p.className='confetti'; p.style.left=Math.random()*100+'%';
+    p.style.backgroundColor=cs[Math.floor(Math.random()*cs.length)];
+    p.style.animationDuration=(2.5+Math.random()*3)+'s'; p.style.animationDelay=(Math.random()*2)+'s'; bx.appendChild(p);
+  }
+}
+
+window.showEnding = function() {
+  createConfetti(); var stg=document.getElementById('dance-stage');
+  if(stg) {
+    stg.innerHTML="";
+    stages.forEach(function(cD, i) {
+      var dn=document.createElement('div'); dn.className='dancer'; dn.setAttribute('onclick', 'window.clickCharacter('+i+')');
+      var zC=cD.needsExtraZoom?"img-extra-zoom":"", cC=cD.name==="和泉式部"?"custom-thumb":"";
+      dn.innerHTML='<img src="'+(cD.freedImg||cD.img)+'" class="'+(zC+" "+cC).trim()+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+      dn.style.animationDelay=((i%3)*0.2)+"s"; stg.appendChild(dn);
+    });
+  }
+  window.switchScreen('ending-screen');
+};
+
+if(document.readyState==='complete'||document.readyState==='interactive'){initFloatingBg();}else{document.addEventListener('DOMContentLoaded',initFloatingBg);}
+</script>
+</body>
+</html>
