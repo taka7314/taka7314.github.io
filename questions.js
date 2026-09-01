@@ -361,7 +361,7 @@ const masterQuestionBank = [
   { id: 425, genre: "対義語", type: "choice", stem: "「過少」の対義語はどれ？", options: ["過多", "膨大", "多量", "過大"], answer: "過大" },
   { id: 426, genre: "対義語", type: "choice", stem: "「錯綜（さくそう）」の対義語はどれ？", options: ["整理", "交差", "複雑", "停滞"], answer: "整理" },
   { id: 427, genre: "対義語", type: "choice", stem: "「楽観」の対義語はどれ？", options: ["悲観", "楽観", "達観", "静観"], answer: "悲観" },
-  { id: 428, genre: "対義語", type: "choice", stem: "「顕著」の対義語はどれ？", options: ["潜在", "隠蔽", "微小", "曖昧"], answer: "潜在" },
+  { id: 428, genre: "対義語", type: "choice", stem: "「顕著」の対義語はどれ？", options: ["隠微", "潜在", "微小", "曖昧"], answer: "潜在" },
   { id: 429, genre: "対義語", type: "choice", stem: "「主観」の対義語はどれ？", options: ["客観", "直感", "悲観", "楽観"], answer: "客観" },
   { id: 430, genre: "対義語", type: "choice", stem: "「積極」の対義語はどれ？", options: ["消極", "否定", "停滞", "受動"], answer: "消極" },
   { id: 431, genre: "対義語", type: "choice", stem: "「需要」の対義語はどれ？", options: ["供給", "消費", "生産", "購買"], answer: "供給" },
