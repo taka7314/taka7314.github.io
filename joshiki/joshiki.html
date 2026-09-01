@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国語常識クエスト - Botanical Forest Edition</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap');
+
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: linear-gradient(135deg, #eaf2ea 0%, #f4f8f4 50%, #eae5d9 100%);
+    margin: 0;
+    padding: 0;
+    color: #233323;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 950px; 
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 1.2em;
+    font-family: inherit;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s;
+  }
+  .btn-primary { background-color: #3a6b35; box-shadow: 0 6px 0 #244721; }
+  .btn-stats { background-color: #536b4e; box-shadow: 0 6px 0 #364932; }
+  .btn-danger { background-color: #b54a36; box-shadow: 0 4px 0 #7e3022; }
+  .btn:active { transform: translateY(6px); box-shadow: none; }
+  
+  .btn-home {
+    background-color: #6b7a61;
+    box-shadow: 0 4px 0 #485440;
+    font-size: 1em;
+    padding: 10px 20px;
+  }
+
+  #top-page { padding-top: 3vh; }
+  .title {
+    font-size: 3em;
+    color: #274924;
+    text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px #c6e2c8;
+    margin-bottom: 25px;
+    font-weight: 800;
+  }
+
+  .main-buttons { margin-bottom: 25px; }
+
+  .settings-card {
+    background: #f9fcf9;
+    border-radius: 20px; 
+    padding: 20px; 
+    max-width: 700px; 
+    margin: 0 auto 20px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    border: 3px solid #7cb082;
+  }
+  .settings-title {
+    font-size: 1.1em; 
+    font-weight: bold;
+    color: #274924;
+    margin-bottom: 12px;
+    text-align: center;
+    border-bottom: 2px dashed #7cb082;
+    padding-bottom: 8px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px; 
+    margin-bottom: 12px;
+  }
+  .category-label {
+    display: flex;
+    align-items: center;
+    background: #edf5ee;
+    padding: 6px 10px; 
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88em; 
+    font-weight: bold;
+    color: #274924;
+    border: 1px solid #a4cfa8;
+    transition: background 0.2s;
+  }
+  .category-label:hover { background: #dcecdc; }
+  .category-label input[type="checkbox"] { margin-right: 6px; accent-color: #3a6b35; }
+  .select-all-btns { text-align: center; margin-bottom: 10px; }
+  .btn-small {
+    padding: 6px 14px;
+    font-size: 0.88em; 
+    margin: 0 4px;
+    border-radius: 15px;
+    background: #bdcfbe;
+    color: #233323;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  .btn-small:hover { background: #96b098; color: white; }
+
+  #stage-start-page, #gameover-page, #quest-clear-page, #quiz-page, #stats-page { display: none; }
+  
+  .rpg-card {
+    background-color: #ffffff;
+    color: #233323;
+    padding: 35px; 
+    border-radius: 20px;
+    border: 6px solid #7cb082;
+    box-shadow: 0 10px 25px rgba(39, 73, 36, 0.12);
+    margin: 20px auto;
+    max-width: 650px;
+  }
+
+  .stage-title {
+    font-size: 2.3em;
+    color: #274924;
+    margin-bottom: 10px;
+    font-weight: 800;
+  }
+
+  .boss-area {
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+  }
+  .boss-emoji {
+    font-size: 5.5rem;
+    animation: float 2s infinite ease-in-out;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .stage-desc {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #425444;
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .blackboard {
+    position: relative;
+    background-color: #ffffff;
+    color: #233323;
+    padding: 30px 20px; 
+    min-height: 520px;
+    border-radius: 20px;
+    border: 6px solid #7cb082;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; 
+  }
+
+  .q-badge {
+    background-color: #3a6b35;
+    color: white;
+    padding: 5px 25px;
+    border-radius: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #244721;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .genre-tag {
+    background-color: #7a4f29;
+    color: #ffffff;
+    padding: 4px 15px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+
+  .question-container {
+    background: #f1f7f1;
+    border: 2px solid #a4cfa8;
+    border-radius: 15px;
+    padding: 22px;
+    width: 90%;
+    margin-bottom: 15px;
+  }
+
+  .question-text {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #172917;
+    line-height: 1.6;
+  }
+
+  .answer-slots-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+  }
+
+  .answer-slots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .slot {
+    width: 48px;
+    height: 48px;
+    border: 2px dashed #3a6b35;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #274924;
+    background: #edf5ee;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+  }
+  .slot.filled {
+    border-style: solid;
+    background: #c6e2c8;
+    color: #172917;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .slot.filled:hover {
+    background: #f8d7da;
+    border-color: #b54a36;
+    color: #b54a36;
+  }
+
+  .btn-undo {
+    background-color: #b54a36;
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.9em;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #7e3022;
+    transition: transform 0.1s;
+  }
+  .btn-undo:active { transform: translateY(3px); box-shadow: none; }
+
+  .choices-area {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 10px;
+  }
+  .choices-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 12px; 
+    width: 100%;
+  }
+  .choice-btn {
+    background-color: #f1f7f1;
+    color: #274924;
+    border: 3px solid #a4cfa8; 
+    border-bottom: 5px solid #3a6b35;
+    border-radius: 14px; 
+    min-height: 60px;
+    padding: 10px 6px;
+    font-size: 1.4em; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+  .choice-btn:hover { background-color: #dcecdc; transform: translateY(-2px); }
+  .choice-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+
+  .score-board {
+    display: flex;
+    gap: 20px;
+    background-color: #eaf3ea;
+    border: 2px solid #a4cfa8;
+    border-radius: 12px;
+    padding: 8px 20px;
+    margin-bottom: 10px;
+  }
+  .score-item { display: flex; flex-direction: column; align-items: center; }
+  .score-label { font-size: 0.8em; color: #536b4e; font-weight: bold; }
+  .score-value { font-size: 1.2em; font-weight: bold; color: #274924; }
+
+  /* ポップアップを下部に配置 */
+  .center-popup {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 340px;
+    padding: 20px 25px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .popup-correct { border: 5px solid #3a6b35; }
+  .popup-wrong { border: 5px solid #b54a36; }
+  .popup-title { font-size: 2em; font-weight: 800; margin-bottom: 6px; }
+  .popup-title.correct { color: #274924; }
+  .popup-title.wrong { color: #b54a36; }
+  .popup-desc { font-size: 1em; color: #233323; font-weight: bold; margin-bottom: 15px; line-height: 1.4; }
+
+  .stats-card {
+    background-color: #ffffff;
+    border: 3px solid #7cb082;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    color: #233323;
+  }
+  .stats-table { width: 100%; border-collapse: collapse; font-size: 1.1em; }
+  .stats-table th, .stats-table td { border: 1px solid #a4cfa8; padding: 10px; text-align: center; }
+  .stats-table th { background-color: #edf5ee; color: #274924; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- トップページ -->
+  <div id="top-page">
+    <div class="title">🌿 国語常識クエスト 🍃</div>
+    
+    <div class="main-buttons">
+      <button class="btn btn-primary" onclick="initGame()">🗡️ クエストに出発する</button><br>
+      <button class="btn btn-stats" onclick="showStatsPage()">📜 冒険の記録</button>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-title">出題ジャンルを選ぶ (全16種類)</div>
+      <div class="select-all-btns">
+        <button class="btn-small" onclick="toggleCategories(true)">すべて選択</button>
+        <button class="btn-small" onclick="toggleCategories(false)">すべて解除</button>
+      </div>
+      <div class="category-grid" id="category-checkboxes"></div>
+    </div>
+  </div>
+
+  <!-- ステージ開始画面 -->
+  <div id="stage-start-page">
+    <div class="top-bar">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+    <div class="rpg-card">
+      <div class="stage-title" id="stage-title-text">STAGE 1</div>
+      <div class="boss-area">
+        <div class="boss-emoji" id="boss-emoji">🦊</div>
+      </div>
+      <div class="stage-desc" id="stage-desc-text">
+        立ちはだかる敵を倒せ！
+      </div>
+      <button class="btn btn-primary" style="font-size: 1.4em; padding: 12px 40px;" onclick="startStageQuestions()">▶ バトルスタート</button>
+    </div>
+  </div>
+
+  <!-- クイズページ -->
+  <div id="quiz-page">
+    <div class="top-bar">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+    
+    <div class="blackboard">
+      <div>
+        <div class="q-badge" id="q-number-badge">Ｑ１</div><br>
+        <div class="genre-tag" id="genre-tag">ジャンル</div>
+      </div>
+
+      <div class="question-container">
+        <div class="question-text" id="question-text">問題文</div>
+        <div class="answer-slots-wrapper">
+          <div class="answer-slots" id="answer-slots"></div>
+          <button id="undo-btn" class="btn-undo" style="display: none;" onclick="undoLastInput()">⌫ 1字消す</button>
+        </div>
+      </div>
+
+      <div class="score-board">
+        <div class="score-item">
+          <span class="score-label">回答数</span>
+          <span class="score-value" id="score-attempts">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">正解数 / 目標</span>
+          <span class="score-value"><span id="score-correct">0</span> / <span id="score-target">0</span></span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">正解率</span>
+          <span class="score-value" id="score-accuracy">100%</span>
+        </div>
+      </div>
+
+      <div class="choices-area">
+        <div class="choices-grid" id="choices-container"></div>
+      </div>
+
+      <div id="feedback-popup" class="center-popup" style="display: none;">
+        <div id="popup-title" class="popup-title">Clear!</div>
+        <div id="popup-desc" class="popup-desc">解説テキスト</div>
+        <button id="popup-btn" class="btn btn-primary" style="margin: 0; padding: 10px 25px;">次へ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ゲームオーバー画面 -->
+  <div id="gameover-page">
+    <div class="rpg-card" style="border-color: #b54a36;">
+      <div class="stage-title" style="color: #b54a36;">YOU DIED...</div>
+      <div class="boss-area">
+        <div class="boss-emoji" style="animation: none; filter: grayscale(1); transform: rotate(90deg);">💀</div>
+      </div>
+      <div class="stage-desc" style="color: #7e3022;">正解率が65%に満たなかったため挑戦失敗...。<br>諦めずに再挑戦しよう！</div>
+      <button class="btn btn-primary" onclick="retryStage()">🔄 このステージをやり直す</button><br>
+      <button class="btn btn-home" style="margin-top: 15px;" onclick="goHome()">トップページに戻る</button>
+    </div>
+  </div>
+
+  <!-- 全クリア画面 -->
+  <div id="quest-clear-page">
+    <div class="rpg-card" style="border-color: #3a6b35;">
+      <div style="font-size: 4em; animation: float 1.5s infinite;">🎊 🍃 🎉</div>
+      <div class="stage-title" style="color: #274924; font-size: 2.8em;">QUEST CLEARED!!</div>
+      <div class="boss-area">
+        <div class="boss-emoji">👑</div>
+      </div>
+      <div class="stage-desc" style="font-size: 1.2em; color: #172917;">
+        ✨ おめでとう！ 全7ステージ制覇達成！ ✨<br>
+        1,000問超の試練を乗り越え、君は真の「国語常識マスター」となった！
+      </div>
+      <button class="btn btn-primary" onclick="goHome()">🏠 トップページに戻る</button>
+    </div>
+  </div>
+
+  <!-- 成績ページ -->
+  <div id="stats-page">
+    <div class="top-bar" style="justify-content: space-between;">
+      <button class="btn btn-home" onclick="goHome()">🏠 トップページに戻る</button>
+      <button class="btn btn-danger" onclick="clearStats()">🗑️ 記録を消去</button>
+    </div>
+    <div class="stats-card">
+      <h2>📜 冒険の記録</h2>
+      <table class="stats-table" id="stats-table"></table>
+    </div>
+  </div>
+</div>
+
+<!-- 外部問題ファイルの読み込み -->
+<script src="questions.js"></script>
+
+<script>
+  const BOSSES = ["🦊", "👺", "🌊", "👹", "🦅", "🐉", "👿"];
+  const maxStage = 7;
+
+  // 各ステージに必要な正解数設定
+  const STAGE_CONFIG = [
+    { stage: 1, required: 7 },
+    { stage: 2, required: 7 },
+    { stage: 3, required: 9 },
+    { stage: 4, required: 9 },
+    { stage: 5, required: 11 },
+    { stage: 6, required: 11 },
+    { stage: 7, required: 13 }
+  ];
+
+  // 直近50問出題履歴（問題文テキストで同一定義）
+  let recentQuestionStems = [];
+  const RECENT_LIMIT = 50;
+
+  let currentStage = 1;
+  let currentQuestion = null;
+  let currentParsedAnswerChars = [];
+  let stageAttempts = 0;
+  let stageCorrect = 0;
+  let qIndexInStage = 0;
+  let userInputArray = [];
+
+  window.onload = function() {
+    if (typeof GENRES !== 'undefined' && typeof masterQuestionBank !== 'undefined') {
+      const container = document.getElementById('category-checkboxes');
+      container.innerHTML = '';
+      GENRES.forEach(g => {
+        container.innerHTML += `
+          <label class="category-label">
+            <input type="checkbox" value="${g}" class="cat-checkbox" checked> ${g}
+          </label>
+        `;
+      });
+    }
+  };
+
+  // 問題文に含まれる (V2) や (問3)、【基礎】【標準】【重要】などの余分なタグを自動削除する関数
+  function cleanStem(stemText) {
+    if (!stemText) return '';
+    return stemText
+      .replace(/[\(（\[【]\s*(問\d+|V\d+|基礎|標準|重要|[A-Za-z0-9_-]+)\s*[\)\]）】]/gi, '')
+      .replace(/\s*[\(（\[【]?\s*問\d+\s*[\)\]）】]?\s*$/g, '')
+      .trim();
+  }
+
+  function toggleCategories(selectAll) {
+    document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = selectAll);
+  }
+
+  function initGame() {
+    const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
+    if (selected.length === 0) {
+      alert("出題するジャンルを1つ以上選択してください！");
+      return;
+    }
+
+    currentStage = 1;
+    showStageStartPage();
+  }
+
+  function showStageStartPage() {
+    hideAllPages();
+    const config = STAGE_CONFIG[currentStage - 1];
+    document.getElementById('stage-start-page').style.display = 'block';
+    document.getElementById('stage-title-text').innerText = `STAGE ${currentStage}`;
+    document.getElementById('boss-emoji').innerText = BOSSES[(currentStage - 1) % BOSSES.length];
+    document.getElementById('stage-desc-text').innerHTML = 
+      `立ちはだかる敵を倒せ！<br><span style="color: #274924; font-size: 1.3em;">【${config.required}題】正解 (正解率65%以上)</span> でステージクリアだ！`;
+  }
+
+  function startStageQuestions() {
+    stageAttempts = 0;
+    stageCorrect = 0;
+    qIndexInStage = 0;
+    
+    hideAllPages();
+    document.getElementById('quiz-page').style.display = 'block';
+    loadNextQuestion();
+  }
+
+  function getNextQuestionFromBank() {
+    const selectedGenres = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
+    let availablePool = masterQuestionBank.filter(q => selectedGenres.includes(q.genre));
+    
+    if (availablePool.length === 0) return null;
+
+    let candidatePool = availablePool.filter(q => !recentQuestionStems.includes(cleanStem(q.stem)));
+    if (candidatePool.length === 0) {
+      candidatePool = availablePool;
+    }
+
+    const picked = candidatePool[Math.floor(Math.random() * candidatePool.length)];
+
+    const cleanedText = cleanStem(picked.stem);
+    recentQuestionStems.push(cleanedText);
+    if (recentQuestionStems.length > RECENT_LIMIT) {
+      recentQuestionStems.shift();
+    }
+
+    return picked;
+  }
+
+  function loadNextQuestion() {
+    currentQuestion = getNextQuestionFromBank();
+    if (!currentQuestion) {
+      alert("選択されたジャンルに該当する問題が見つかりません。");
+      goHome();
+      return;
+    }
+
+    qIndexInStage++;
+    userInputArray = [];
+    updateScoreBoard();
+    
+    document.getElementById('q-number-badge').innerText = `第 ${qIndexInStage} 問`;
+    document.getElementById('genre-tag').innerText = currentQuestion.genre;
+    document.getElementById('question-text').innerText = cleanStem(currentQuestion.stem);
+    document.getElementById('feedback-popup').style.display = 'none';
+
+    const slotsContainer = document.getElementById('answer-slots');
+    const choicesContainer = document.getElementById('choices-container');
+    slotsContainer.innerHTML = '';
+    choicesContainer.innerHTML = '';
+    updateUndoButtonVisibility();
+
+    if (currentQuestion.type === 'kanji_write' || currentQuestion.type === 'kanji_read') {
+      if (Array.isArray(currentQuestion.answer)) {
+        currentParsedAnswerChars = currentQuestion.answer.join('').split('');
+      } else if (typeof currentQuestion.answer === 'string') {
+        currentParsedAnswerChars = currentQuestion.answer.split('');
+      } else {
+        currentParsedAnswerChars = [];
+      }
+
+      currentParsedAnswerChars.forEach((_, idx) => {
+        slotsContainer.innerHTML += `<div class="slot" id="slot-${idx}" onclick="handleSlotClick(${idx})" title="タップして解除">？</div>`;
+      });
+
+      let pool = [];
+      if (currentQuestion.type === 'kanji_write') {
+        let rawOptions = Array.isArray(currentQuestion.options) ? currentQuestion.options : [];
+        pool = rawOptions.join('').split('');
+      } else {
+        let rawDummies = Array.isArray(currentQuestion.dummies) ? currentQuestion.dummies : [];
+        let dummyChars = rawDummies.join('').split('');
+        pool = [...currentParsedAnswerChars, ...dummyChars];
+
+        // 漢字の読み問題で選択肢から漢字を排除
+        pool = pool.filter(char => !/[\u4E00-\u9FFF\u3400-\u4DBF]/.test(char));
+      }
+
+      // 「捏造」問題での「で」除外
+      if (currentQuestion.stem && currentQuestion.stem.includes('捏造')) {
+        pool = pool.filter(c => c !== 'で');
+      }
+      
+      pool.sort(() => Math.random() - 0.5);
+      pool.forEach(char => {
+        choicesContainer.innerHTML += `<button class="choice-btn" onclick="handleSequentialInput('${char}')">${char}</button>`;
+      });
+    } else {
+      let options = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+      options.forEach(opt => {
+        choicesContainer.innerHTML += `<button class="choice-btn" style="grid-column: span 2;" onclick="checkChoiceAnswer('${opt}')">${opt}</button>`;
+      });
+    }
+  }
+
+  function handleSequentialInput(char) {
+    if (userInputArray.length >= currentParsedAnswerChars.length) return;
+
+    userInputArray.push(char);
+    
+    const slots = document.querySelectorAll('.slot');
+    const targetIdx = userInputArray.length - 1;
+    slots[targetIdx].innerText = char;
+    slots[targetIdx].classList.add('filled');
+
+    updateUndoButtonVisibility();
+
+    if (userInputArray.length === currentParsedAnswerChars.length) {
+      stageAttempts++;
+      const isCorrect = userInputArray.join('') === currentParsedAnswerChars.join('');
+      saveDailyStats(isCorrect);
+
+      if (isCorrect) {
+        stageCorrect++;
+      }
+      updateScoreBoard();
+      showFeedbackPopup(isCorrect);
+    }
+  }
+
+  function handleSlotClick(idx) {
+    if (idx >= userInputArray.length) return;
+
+    userInputArray = userInputArray.slice(0, idx);
+    const slots = document.querySelectorAll('.slot');
+    slots.forEach((s, i) => {
+      if (i >= idx) {
+        s.innerText = '？';
+        s.classList.remove('filled');
+      }
+    });
+    updateUndoButtonVisibility();
+  }
+
+  function undoLastInput() {
+    if (userInputArray.length === 0) return;
+    handleSlotClick(userInputArray.length - 1);
+  }
+
+  function updateUndoButtonVisibility() {
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) {
+      undoBtn.style.display = (userInputArray.length > 0) ? 'inline-block' : 'none';
+    }
+  }
+
+  function checkChoiceAnswer(selected) {
+    stageAttempts++;
+    const isCorrect = (selected === currentQuestion.answer);
+    saveDailyStats(isCorrect);
+
+    if (isCorrect) {
+      stageCorrect++;
+    }
+    updateScoreBoard();
+    showFeedbackPopup(isCorrect);
+  }
+
+  function updateScoreBoard() {
+    const config = STAGE_CONFIG[currentStage - 1];
+    document.getElementById('score-attempts').innerText = stageAttempts;
+    document.getElementById('score-correct').innerText = stageCorrect;
+    document.getElementById('score-target').innerText = config.required;
+    
+    const accuracy = stageAttempts > 0 ? Math.round((stageCorrect / stageAttempts) * 100) : 100;
+    document.getElementById('score-accuracy').innerText = `${accuracy}%`;
+  }
+
+  function showFeedbackPopup(isCorrect) {
+    const popup = document.getElementById('feedback-popup');
+    const title = document.getElementById('popup-title');
+    const desc = document.getElementById('popup-desc');
+    const btn = document.getElementById('popup-btn');
+    const config = STAGE_CONFIG[currentStage - 1];
+
+    // 許容できる最大ミス数 (65%以上を保つために許容されるミス回数)
+    const maxAllowedMistakes = Math.floor(config.required / 0.65) - config.required;
+    const currentMistakes = stageAttempts - stageCorrect;
+    const currentAccuracy = Math.round((stageCorrect / stageAttempts) * 100);
+
+    popup.style.display = 'flex';
+
+    if (isCorrect) {
+      popup.className = "center-popup popup-correct";
+      title.className = "popup-title correct";
+      title.innerText = "⭕ 正解！";
+
+      if (stageCorrect >= config.required) {
+        if (currentAccuracy >= 65) {
+          if (currentStage === maxStage) {
+            desc.innerHTML = `見事 ${config.required} 題達成！（正解率 ${currentAccuracy}%）<br>最終ステージ突破！`;
+            btn.innerText = "感動のエンディングへ ✨";
+            btn.onclick = () => { 
+              hideAllPages(); 
+              document.getElementById('quest-clear-page').style.display = 'block';
+            };
+          } else {
+            desc.innerHTML = `見事 ${config.required} 題達成！（正解率 ${currentAccuracy}%）<br>ステージ ${currentStage} クリア！`;
+            btn.innerText = "次のステージへ ➔";
+            btn.onclick = () => { currentStage++; showStageStartPage(); };
+          }
+        } else {
+          // 目標正解数には達したが正解率が65%未満の場合
+          popup.className = "center-popup popup-wrong";
+          title.className = "popup-title wrong";
+          title.innerText = "💀 GAME OVER";
+          desc.innerHTML = `目標正解数に達しましたが、正解率が65%に満たませんでした。<br>（正解率: ${currentAccuracy}%）`;
+          btn.innerText = "結果画面へ ➔";
+          btn.onclick = () => { showGameOverPage(); };
+        }
+      } else {
+        desc.innerHTML = `正解！<br>目標まであと ${config.required - stageCorrect} 題！（現在正解率: ${currentAccuracy}%）`;
+        btn.innerText = "次の問題へ ➔";
+        btn.onclick = () => { loadNextQuestion(); };
+      }
+    } else {
+      popup.className = "center-popup popup-wrong";
+      title.className = "popup-title wrong";
+
+      const correctAnsStr = Array.isArray(currentQuestion.answer) ? currentQuestion.answer.join('') : currentQuestion.answer;
+
+      // ミス回数が許容を超えた場合、即時ゲームオーバー
+      if (currentMistakes > maxAllowedMistakes) {
+        title.innerText = "💀 GAME OVER";
+        desc.innerHTML = `不正解！正解は「${correctAnsStr}」でした。<br>正解率65%以上の達成が不可能になりました。（正解率: ${currentAccuracy}%）`;
+        btn.innerText = "結果画面へ ➔";
+        btn.onclick = () => { showGameOverPage(); };
+      } else {
+        const remainingMistakes = maxAllowedMistakes - currentMistakes;
+        title.innerText = "❌ 不正解！";
+        desc.innerHTML = `正解は「${correctAnsStr}」でした。<br>（許容ミスあと ${remainingMistakes} 回 / 現在正解率: ${currentAccuracy}%）`;
+        btn.innerText = "次の問題へ ➔";
+        btn.onclick = () => { loadNextQuestion(); };
+      }
+    }
+  }
+
+  function saveDailyStats(isCorrect) {
+    const today = new Date().toLocaleDateString('ja-JP');
+    let stats = JSON.parse(localStorage.getItem('kokugo_quiz_stats') || '{}');
+    if (!stats[today]) stats[today] = { attempts: 0, correct: 0 };
+    stats[today].attempts++;
+    if (isCorrect) stats[today].correct++;
+    localStorage.setItem('kokugo_quiz_stats', JSON.stringify(stats));
+  }
+
+  function showStatsPage() {
+    hideAllPages();
+    document.getElementById('stats-page').style.display = 'block';
+    const stats = JSON.parse(localStorage.getItem('kokugo_quiz_stats') || '{}');
+    let tableHtml = '<tr><th>日付</th><th>回答数</th><th>正解数</th><th>正解率</th></tr>';
+    
+    Object.keys(stats).sort().forEach(d => {
+      let acc = Math.round((stats[d].correct / stats[d].attempts) * 100);
+      tableHtml += `<tr><td>${d}</td><td>${stats[d].attempts}</td><td>${stats[d].correct}</td><td>${acc}%</td></tr>`;
+    });
+    document.getElementById('stats-table').innerHTML = tableHtml;
+  }
+
+  function clearStats() {
+    if (confirm("成績記録を削除しますか？")) {
+      localStorage.removeItem('kokugo_quiz_stats');
+      showStatsPage();
+    }
+  }
+
+  function showGameOverPage() {
+    hideAllPages();
+    document.getElementById('gameover-page').style.display = 'block';
+  }
+
+  function retryStage() { showStageStartPage(); }
+  function hideAllPages() {
+    ['top-page', 'stage-start-page', 'quiz-page', 'gameover-page', 'quest-clear-page', 'stats-page'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+  }
+  function goHome() { hideAllPages(); document.getElementById('top-page').style.display = 'block'; }
+</script>
+</body>
+</html>
